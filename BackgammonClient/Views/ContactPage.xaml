@@ -1,0 +1,29 @@
+﻿<Page x:Class="BackgammonClient.Views.ContactPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BackgammonClient.Views"
+      xmlns:userModel ="clr-namespace:BackgammonClient.Models"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="800"
+      Title="ContactPage">
+
+
+    <Page.Resources>
+        <DataTemplate DataType="{x:Type userModel:UserForView}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock  Text="{Binding UserName}"></TextBlock>
+                <TextBlock Text="{Binding State}"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="Pink">
+        <ListBox x:Name="listBox" SelectedItem="{Binding ChosenContact}" ItemsSource="{Binding ContactList}"  HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="350" Margin="224,0,0,0"/>
+        <Button x:Name="playButton" Content="Play" Command="{Binding OpenGameCommand}" HorizontalAlignment="Left" Margin="361,415,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="chatButton" Content="Chat"  Command="{Binding OpenChatCommad}" HorizontalAlignment="Left" Margin="224,415,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="logoutButton" Content="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="499,415,0,0" VerticalAlignment="Top" Width="75"/>
+
+    </Grid>
+</Page>

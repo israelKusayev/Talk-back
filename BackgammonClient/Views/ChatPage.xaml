@@ -1,0 +1,24 @@
+﻿<Page x:Class="BackgammonClient.Views.ChatPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BackgammonClient.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Chat page">
+
+    <Grid Background="WhiteSmoke">
+        <TextBlock x:Name="titleTextBlock" TextAlignment="Center" HorizontalAlignment="Left" Margin="313,24,0,0" TextWrapping="Wrap" Text="{Binding UserToChatWith}" VerticalAlignment="Top" Width="183" RenderTransformOrigin="0.536,0.556" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
+        
+        <TextBlock x:Name="consoleTextBlock" Text="{Binding MessageBlock}" HorizontalAlignment="Left" Height="252" Margin="40,60,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="719" Background="#FFD8D8D8" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"/>
+        <TextBox x:Name="massageTextBox" Text="{Binding Message}"  HorizontalAlignment="Left" Height="59" Margin="40,332,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="639"/>
+        <Button x:Name="button" Content="Send" Command="{Binding SendMessageCommand}" HorizontalAlignment="Left" Margin="701,349,0,0" VerticalAlignment="Top" Width="58" Height="27" Cursor="ScrollW" RenderTransformOrigin="0.706,0.493"/>
+        <Button x:Name="button1" Command="{Binding BackCommand}"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Height="23" >
+            <Button.Background>
+                <ImageBrush ImageSource="/BackgammonClient;component/Assets/X.png"/>
+            </Button.Background>
+        </Button>
+
+    </Grid>
+</Page>

@@ -1,0 +1,23 @@
+﻿<Page x:Class="BackgammonClient.Views.RegisterPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BackgammonClient.Views"
+      
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="400"
+      Title="RegisterPage">
+
+    <Grid Background="White">
+        
+        <Label x:Name="TitleLabel" Content="Register" HorizontalAlignment="Left" Margin="162,56,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="20" FontFamily="High Tower Text"/>
+        <Label x:Name="userNameLabel" Content="User name" HorizontalAlignment="Left" Margin="74,120,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="PasswordLabel" Content="Password" HorizontalAlignment="Left" Margin="74,206,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="userNameTextBox" HorizontalAlignment="Left" Height="23" Margin="74,151,0,0" TextWrapping="Wrap" Text="{Binding User.UserName}" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Height="23" Margin="74,237,0,0" TextWrapping="Wrap" Text="{Binding User.Password}" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="registerButton" Command="{Binding RegisterCommand}" Content="Register" HorizontalAlignment="Left" Margin="74,316,0,0" VerticalAlignment="Top" Width="120" Height="29"/>
+        <Button x:Name="loginButton" Command="{Binding LoginCommand}" Content="Login" HorizontalAlignment="Left" Margin="200,316,0,0" VerticalAlignment="Top" Width="120" Height="29"/>
+
+    </Grid>
+</Page>
