@@ -12,25 +12,33 @@ namespace BackgammonServer.Hubs
     public class MainHub : Hub
     {
         ServerUserManager _userManager = ServerUserManager.Instance;
-        ServerChatManager _chatManager;
+        //ServerChatManager _chatManager;
 
         public MainHub()
         {
-            _chatManager = new ServerChatManager();
+            //_chatManager = new ServerChatManager();
         }
 
         #region User
-        public void Register(User newUser)
+        public bool Register(User newUser)
         {
-            _userManager.RegisterToDb(newUser);
-            _userManager.AddConectionId(Context.ConnectionId, newUser.UserName);
-            NotifyUserStateChanged();
+            if (_userManager.RegisterToDb(newUser))
+            {
+                _userManager.AddConectionId(Context.ConnectionId, newUser.UserName);
+                NotifyUserStateChanged();
+                return true;
+            }
+            return false;
         }
-        public void Login(User user)
+        public bool Login(User user)
         {
-            _userManager.Login(user);
-            _userManager.AddConectionId(Context.ConnectionId, user.UserName);
-            NotifyUserStateChanged();
+            if (_userManager.Login(user))
+            {
+                _userManager.AddConectionId(Context.ConnectionId, user.UserName);
+                NotifyUserStateChanged();
+                return true;
+            }
+            return false;
         }
 
         public void Logout(string userName)
@@ -56,7 +64,7 @@ namespace BackgammonServer.Hubs
         public void SendMessage(string message, string reciverName, string senderName)
         {
             string conectionId = _userManager.GetConectionId(reciverName);
-            Clients.Client(conectionId).brodcastMessage(message, senderName);
+            Clients.Client(conectionId).sendMessage(message, senderName);
         }
 
         public void ChangeUserStatus(string userName, UserState state)

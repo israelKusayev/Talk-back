@@ -26,10 +26,23 @@ namespace BackgammonServer.BL
             }
         }
 
+        private ServerUserManager()
+        {
+            _contactList = new Dictionary<string, UserState>();
+            _userConections = new Dictionary<string, string>();
+            using (var context = new Db())
+            {
+                var usersInDb = context.UserTable.Where((e) => e.UserName != "");
+                foreach (var user in usersInDb)
+                {
+                    _contactList.Add(user.UserName, UserState.offline);
+                }
+            }
+        }
+
         internal string GetConectionId(string reciverName)
         {
-            string id = _userConections[reciverName];
-            return id;
+            return _userConections[reciverName];
         }
 
         internal void AddConectionId(string connectionId, string userName)
@@ -47,27 +60,6 @@ namespace BackgammonServer.BL
         internal void RemoveConectionId(string userName)
         {
             _userConections.Remove(userName);
-        }
-
-        private ServerUserManager()
-        {
-            _contactList = new Dictionary<string, UserState>();
-            _userConections = new Dictionary<string, string>();
-            using (var context = new Db())
-            {
-                var usersInDb = context.UserTable.Where((e) => e.UserName != "");
-                foreach (var user in usersInDb)
-                {
-                    _contactList.Add(user.UserName, UserState.offline);
-                }
-            }
-        }
-
-
-
-        internal void Logout(string userName)
-        {
-            UpdateContactList(userName, UserState.offline);
         }
 
         public void UpdateContactList(string username, UserState newState)
@@ -113,6 +105,11 @@ namespace BackgammonServer.BL
             }
             UpdateContactList(user.UserName, UserState.online);
             return true;
+        }
+
+        internal void Logout(string userName)
+        {
+            UpdateContactList(userName, UserState.offline);
         }
     }
 }

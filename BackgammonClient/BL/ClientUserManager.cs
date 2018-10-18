@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BackgammonClient.BL
 {
@@ -13,20 +14,19 @@ namespace BackgammonClient.BL
     class ClientUserManager
     {
         private event NotifyStateEventHandler NotifyEvent;
-
-        private InitilaizeProxy initilaize = InitilaizeProxy.Instance;
+        private InitilaizeProxy _server = InitilaizeProxy.Instance;
         public static string CurrentUser { get; set; }
         public static string UserToChatWith { get; set; }
 
         public ClientUserManager()
         {
-            initilaize.Proxy.On("notifyUserStateChanged", (Dictionary<string, UserState> updatedContactList) =>
+            _server.Proxy.On("notifyUserStateChanged", (Dictionary<string, UserState> updatedContactList) =>
             {
                 updatedContactList.Remove(CurrentUser);
                 NotifyEvent?.Invoke(updatedContactList);
             });
 
-            initilaize.HubConnection.Start().Wait();
+            _server.HubConnection.Start().Wait();
         }
 
 
@@ -35,13 +35,11 @@ namespace BackgammonClient.BL
             NotifyEvent += onNotifyEvent;
         }
 
-
-
         internal Dictionary<string, UserState> GetContactList()
         {
             Task<Dictionary<string, UserState>> Contacts = Task.Run(async () =>
            {
-               return await initilaize.Proxy.Invoke<Dictionary<string, UserState>>("GetContactList");
+               return await _server.Proxy.Invoke<Dictionary<string, UserState>>("GetContactList");
            });
             Contacts.ConfigureAwait(false);
             Contacts.Wait();
@@ -50,60 +48,84 @@ namespace BackgammonClient.BL
             return Contacts.Result;
         }
 
-        internal void InvokeLogout()
-        {
-            Task task = Task.Run(async () =>
-            {
-                await initilaize.Proxy.Invoke("Logout", CurrentUser);
-            });
-            task.ConfigureAwait(false);
-            task.Wait();
-        }
-
         internal void ChangeUserStatus(UserState state)
         {
             Task task = Task.Run(async () =>
             {
-                await initilaize.Proxy.Invoke("ChangeUserStatus", CurrentUser, state);
+                await _server.Proxy.Invoke("ChangeUserStatus", CurrentUser, state);
             });
             task.ConfigureAwait(false);
             task.Wait();
         }
 
-        internal void InvokeRegister(User user)
+        internal bool InvokeRegister(User user)
         {
             try
             {
                 CurrentUser = user.UserName;
-                Task task = Task.Run(async () =>
+                Task<bool> task = Task<bool>.Run(async () =>
                 {
-                    await initilaize.Proxy.Invoke("Register", user);
+                    return await _server.Proxy.Invoke<bool>("Register", user);
+
                 });
                 task.ConfigureAwait(false);
                 task.Wait();
+                if (!task.Result)
+                {
+                    MessageBox.Show("this username already exists.");
+                    return false;
+                }
+                return true;
             }
             catch (Exception)
             {
-                throw;
+                MessageBox.Show("server error please try again.");
+                return false;
             }
 
         }
 
-        internal void InvokeLogin(User user)
+        internal bool InvokeLogin(User user)
         {
             try
             {
                 CurrentUser = user.UserName;
-                Task task = Task.Run(async () =>
+                Task<bool> task = Task<bool>.Run(async () =>
                 {
-                    await initilaize.Proxy.Invoke("Login", user);
+                    return await _server.Proxy.Invoke<bool>("Login", user);
                 });
                 task.ConfigureAwait(false);
                 task.Wait();
+                if (!task.Result)
+                {
+                    MessageBox.Show("username or password is incorrect.");
+                    return false;
+                }
+                return true;
             }
             catch (Exception)
             {
-                throw;
+                MessageBox.Show("server error please try again.");
+                return false;
+            }
+        }
+
+        internal bool InvokeLogout()
+        {
+            try
+            {
+                Task task = Task.Run(async () =>
+                {
+                    await _server.Proxy.Invoke("Logout", CurrentUser);
+                });
+                task.ConfigureAwait(false);
+                task.Wait();
+                return true;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("server error please try again.");
+                return false;
             }
         }
     }

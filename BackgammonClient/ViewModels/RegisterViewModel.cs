@@ -33,12 +33,14 @@ namespace BackgammonClient.ViewModels
         {
             if (string.IsNullOrWhiteSpace(User.UserName) || string.IsNullOrWhiteSpace(User.Password))
             {
-                throw new Exception("these fields is required");
+                MessageBox.Show("You must fill the username and password fields.");
             }
             else
             {
-                _userManager.InvokeLogin(User);
-                Application.Current.MainWindow.Content = new ContactPage();
+                if (_userManager.InvokeLogin(User))
+                {
+                    Application.Current.MainWindow.Content = new ContactPage();
+                }
             }
         }
 
@@ -46,15 +48,15 @@ namespace BackgammonClient.ViewModels
         {
             if (String.IsNullOrWhiteSpace(User.UserName) || string.IsNullOrWhiteSpace(User.Password))
             {
-                throw new Exception("these fields is required");
+                MessageBox.Show("You must fill the username and password fields.");
             }
             else
             {
-                _userManager.InvokeRegister(User);
-
-                Application.Current.MainWindow.Content = new ContactPage();
+                if (_userManager.InvokeRegister(User))
+                {
+                    Application.Current.MainWindow.Content = new ContactPage();
+                }
             }
-
         }
     }
 }

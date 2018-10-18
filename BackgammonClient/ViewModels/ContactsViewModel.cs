@@ -67,8 +67,10 @@ namespace BackgammonClient.ViewModels
 
         private void Logout()
         {
-            _userManager.InvokeLogout();
-            Application.Current.MainWindow.Content = new RegisterPage();
+            if (_userManager.InvokeLogout())
+            {
+                Application.Current.MainWindow.Content = new RegisterPage();
+            }
 
         }
     }
