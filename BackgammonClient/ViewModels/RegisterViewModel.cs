@@ -54,7 +54,8 @@ namespace BackgammonClient.ViewModels
             {
                 if (_userManager.InvokeRegister(User))
                 {
-                    Application.Current.MainWindow.Content = new ContactPage();
+                    ContactPage page = new ContactPage();
+                    Application.Current.MainWindow.Content = page;
                 }
             }
         }

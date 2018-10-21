@@ -121,5 +121,9 @@ namespace BackgammonServer.Hubs
 
             return base.OnDisconnected(stopCalled);
         }
+
+        #region Game
+
+        #endregion
     }
 }

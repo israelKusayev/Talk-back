@@ -18,6 +18,8 @@ namespace BackgammonClient.ViewModels
 {
     class ContactsViewModel : ViewModelPropertyChanged
     {
+
+
         public ICommand LogoutCommand { get; set; }
         public ICommand OpenChatCommad { get; set; }
         public ICommand OpenGameCommad { get; set; }
@@ -51,7 +53,10 @@ namespace BackgammonClient.ViewModels
 
             LogoutCommand = new RelayCommand(Logout);
             OpenChatCommad = new RelayCommand(OpenChat);
+            OpenGameCommad = new RelayCommand(OpenGame);
         }
+
+
 
         // update contacts list.
         private void ContactUptaded(Dictionary<string, UserState> dictionary)
@@ -112,6 +117,12 @@ namespace BackgammonClient.ViewModels
                     MessageBox.Show("user refused to join your chat.");
                 }));
             }
+        }
+
+
+        private void OpenGame()
+        {
+            Application.Current.MainWindow.Content = new GamePage();
         }
 
         //Logout to register page.
