@@ -23,7 +23,7 @@ namespace BackgammonClient.Utils
 
         public void Execute(object parameter)
         {
-            _act();
+            _act();//1
         }
     }
 }

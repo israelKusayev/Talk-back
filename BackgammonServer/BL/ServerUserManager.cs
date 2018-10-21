@@ -13,6 +13,7 @@ namespace BackgammonServer.BL
     {
         internal Dictionary<string, UserState> _contactList { get; private set; }
         internal Dictionary<string, string> _userConections { get; private set; }
+        internal Dictionary<string, string> _interactingUsersPairs { get; set; }
         private static ServerUserManager _instance;
         public static ServerUserManager Instance
         {
@@ -30,6 +31,7 @@ namespace BackgammonServer.BL
         {
             _contactList = new Dictionary<string, UserState>();
             _userConections = new Dictionary<string, string>();
+            _interactingUsersPairs = new Dictionary<string, string>();
             using (var context = new Db())
             {
                 var usersInDb = context.UserTable.Where((e) => e.UserName != "");
@@ -53,7 +55,7 @@ namespace BackgammonServer.BL
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception(e.Message);//todo //if the user try to login and he already logged in.
             }
         }
 
@@ -74,6 +76,7 @@ namespace BackgammonServer.BL
             }
         }
 
+
         public bool RegisterToDb(User user)
         {
 
@@ -93,6 +96,9 @@ namespace BackgammonServer.BL
             return true;
         }
 
+
+
+
         internal bool Login(User user)
         {
             if (user == null || string.IsNullOrWhiteSpace(user.UserName)
@@ -110,6 +116,37 @@ namespace BackgammonServer.BL
         internal void Logout(string userName)
         {
             UpdateContactList(userName, UserState.offline);
+        }
+
+
+        internal void AddNewPaier(string senderName, string reciverName)
+        {
+            _interactingUsersPairs.Add(senderName, reciverName);
+        }
+
+     
+
+        internal void RemovePaier(string userToChatWith)
+        {
+            bool result = _interactingUsersPairs.Remove(userToChatWith);
+            if (!result)
+            {
+                string key = _interactingUsersPairs.FirstOrDefault((x) => x.Value == userToChatWith).Key;
+                _interactingUsersPairs.Remove(key);
+            }
+        }
+
+        internal string GetTheSecondUser(string currentUser)
+        {
+            if (_interactingUsersPairs.ContainsKey(currentUser))
+            {
+                return _interactingUsersPairs[currentUser];
+            }
+            else if (_interactingUsersPairs.ContainsValue(currentUser))
+            {
+                return _interactingUsersPairs.FirstOrDefault((x) => x.Value == currentUser).Key;
+            }
+            return null;
         }
     }
 }

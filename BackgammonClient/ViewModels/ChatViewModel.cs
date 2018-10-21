@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace BackgammonClient.ViewModels
 {
@@ -18,7 +19,21 @@ namespace BackgammonClient.ViewModels
         public string UserToChatWith { get; set; }
         public ICommand SendMessageCommand { get; set; }
         public ICommand BackCommand { get; set; }
-        public string Message { get; set; }
+
+        private string _message;
+        public string Message
+        {
+            get
+            {
+                return _message;
+            }
+            set
+            {
+                _message = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _messageBlock;
         public string MessageBlock
         {
@@ -29,8 +44,11 @@ namespace BackgammonClient.ViewModels
                 OnPropertyChanged();
             }
         }
+
         private ClientUserManager _userManager;
         private ClientChatManager _chatManager;
+
+        //ctor
         public ChatViewModel()
         {
             _userManager = new ClientUserManager();
@@ -39,25 +57,44 @@ namespace BackgammonClient.ViewModels
             SendMessageCommand = new RelayCommand(SandMessage);
             BackCommand = new RelayCommand(Back);
             _chatManager.RegisterSendMessageEvent(ReciveMessage);
+            _chatManager.RegisterUserDisconnectedEvent(ReturnToContactPage);
         }
 
-        private void Back()
-        {
-            _userManager.ChangeUserStatus(UserState.online);
-            Application.Current.MainWindow.Content = new ContactPage();
-        }
-
+        // Send message to user.
         private void SandMessage()
         {
             if (string.IsNullOrWhiteSpace(Message)) return;
             MessageBlock += ChatMessageFormatter.Format(Message, ClientUserManager.CurrentUser);
             _chatManager.InvokeSendMessage(Message);
+            Message = "";
         }
 
+        // Recive message from user.
         private void ReciveMessage(string message, string senderName)
-
         {
             MessageBlock += ChatMessageFormatter.Format(message, senderName);
         }
+
+        // Back to contacts page
+        private void Back()
+        {
+            _userManager.ChangeUserStatus(UserState.online);
+
+            _chatManager.UserDisconnected();
+            Application.Current.MainWindow.Content =new ContactPage();
+            //ReturnToContactPage();
+        }
+
+
+        // this function called from the server, to close the chat to second user.
+        private void ReturnToContactPage()
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                MessageBox.Show("User leave the chat");
+                Application.Current.MainWindow.Content = new ContactPage();
+            }));
+        }
+
     }
 }

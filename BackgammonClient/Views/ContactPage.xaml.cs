@@ -26,7 +26,5 @@ namespace BackgammonClient.Views
             InitializeComponent();
             DataContext = new ContactsViewModel();
         }
-
-        
     }
 }

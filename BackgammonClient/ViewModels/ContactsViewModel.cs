@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace BackgammonClient.ViewModels
 {
@@ -23,6 +24,7 @@ namespace BackgammonClient.ViewModels
         public UserForView ChosenContact { get; set; }
 
         ClientUserManager _userManager;
+        ClientChatManager _chatManager;
         private ObservableCollection<UserForView> _contactList;
         public ObservableCollection<UserForView> ContactList
         {
@@ -36,23 +38,46 @@ namespace BackgammonClient.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        //ctor
         public ContactsViewModel()
         {
             _userManager = new ClientUserManager();
+            _chatManager = new ClientChatManager();
             ContactList = ConvertUserForUserView.ConvertUser(_userManager.GetContactList());
             _userManager.RegisterNotifyEvent(ContactUptaded);
+            _chatManager.RegisterInvitationResponseEvent(HandleUserResponse);
+            _chatManager.RegisterChatRequestEvent(AgreeChatRequest);
 
             LogoutCommand = new RelayCommand(Logout);
             OpenChatCommad = new RelayCommand(OpenChat);
         }
 
+        // update contacts list.
+        private void ContactUptaded(Dictionary<string, UserState> dictionary)
+        {
+            ContactList = ConvertUserForUserView.ConvertUser(dictionary);
+        }
+
+        //Sand request to another user to chat with him.
         private void OpenChat()
         {
             if (ChosenContact != null)
             {
-                ClientUserManager.UserToChatWith = ChosenContact.UserName;
-                _userManager.ChangeUserStatus(UserState.busy);
-                Application.Current.MainWindow.Content = new ChatPage();
+                if (ChosenContact.State == UserState.offline)
+                {
+                    MessageBox.Show("User is offline.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else if (ChosenContact.State == UserState.busy)
+                {
+                    MessageBox.Show("User is not available.");
+                }
+                else
+                {
+                    ClientUserManager.UserToChatWith = ChosenContact.UserName;
+                    _userManager.ChangeUserStatus(UserState.busy);
+                    _chatManager.SendChatRequest();
+                }
             }
             else
             {
@@ -60,18 +85,42 @@ namespace BackgammonClient.ViewModels
             }
         }
 
-        private void ContactUptaded(Dictionary<string, UserState> dictionary)
+        //For reciver, after he agree to chat request.
+        private void AgreeChatRequest()
         {
-            ContactList = ConvertUserForUserView.ConvertUser(dictionary);
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                Application.Current.MainWindow.Content = new ChatPage();
+            }));
+
         }
 
+        //For sender, after reciver agree to chat request.
+        private void HandleUserResponse(bool response)
+        {
+            if (response)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    Application.Current.MainWindow.Content = new ChatPage();
+                }));
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageBox.Show("user refused to join your chat.");
+                }));
+            }
+        }
+
+        //Logout to register page.
         private void Logout()
         {
             if (_userManager.InvokeLogout())
             {
                 Application.Current.MainWindow.Content = new RegisterPage();
             }
-
         }
     }
 }

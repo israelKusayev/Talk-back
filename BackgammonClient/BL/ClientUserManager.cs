@@ -22,7 +22,10 @@ namespace BackgammonClient.BL
         {
             _server.Proxy.On("notifyUserStateChanged", (Dictionary<string, UserState> updatedContactList) =>
             {
-                updatedContactList.Remove(CurrentUser);
+                if (CurrentUser != null)
+                {
+                    updatedContactList.Remove(CurrentUser);
+                }
                 NotifyEvent?.Invoke(updatedContactList);
             });
 
@@ -41,8 +44,8 @@ namespace BackgammonClient.BL
            {
                return await _server.Proxy.Invoke<Dictionary<string, UserState>>("GetContactList");
            });
-            Contacts.ConfigureAwait(false);
-            Contacts.Wait();
+            //Contacts.ConfigureAwait(false);
+            //Contacts.Wait();
 
             Contacts.Result.Remove(CurrentUser);
             return Contacts.Result;
@@ -55,7 +58,7 @@ namespace BackgammonClient.BL
                 await _server.Proxy.Invoke("ChangeUserStatus", CurrentUser, state);
             });
             task.ConfigureAwait(false);
-            task.Wait();
+            //task.Wait();
         }
 
         internal bool InvokeRegister(User user)
@@ -87,9 +90,9 @@ namespace BackgammonClient.BL
 
         internal bool InvokeLogin(User user)
         {
+            CurrentUser = user.UserName;
             try
             {
-                CurrentUser = user.UserName;
                 Task<bool> task = Task<bool>.Run(async () =>
                 {
                     return await _server.Proxy.Invoke<bool>("Login", user);

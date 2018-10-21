@@ -6,24 +6,43 @@
       xmlns:local="clr-namespace:BackgammonClient.Views"
       xmlns:userModel ="clr-namespace:BackgammonClient.Models"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="800"
       Title="ContactPage">
 
 
     <Page.Resources>
         <DataTemplate DataType="{x:Type userModel:UserForView}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock  Text="{Binding UserName}"></TextBlock>
-                <TextBlock Text="{Binding State}"></TextBlock>
-            </StackPanel>
+            <DockPanel  Width="300">
+                <TextBlock HorizontalAlignment="Left" FontSize="20"  Text="{Binding UserName}"></TextBlock>
+                <Ellipse HorizontalAlignment="Right" Stroke="Black"  Width="20" Height="20">
+                    <Ellipse.Style>
+                        <Style TargetType="{x:Type Ellipse}">
+                            <Setter Property="Fill" Value="Red"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding State}" Value="online">
+                                    <Setter Property="Fill" Value="Green"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="busy">
+                                    <Setter Property="Fill" Value="Yellow"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Ellipse.Style>
+                    
+                    
+                </Ellipse>
+            </DockPanel>
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="Pink">
+    <Grid Background="White">
+        <Border  HorizontalAlignment="Center" VerticalAlignment="Center"  BorderBrush="Black" BorderThickness="1">
+        <Grid Height="450" Width="800" Background="LightGray" >
         <ListBox x:Name="listBox" SelectedItem="{Binding ChosenContact}" ItemsSource="{Binding ContactList}"  HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="350" Margin="224,0,0,0"/>
         <Button x:Name="playButton" Content="Play" Command="{Binding OpenGameCommand}" HorizontalAlignment="Left" Margin="361,415,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="chatButton" Content="Chat"  Command="{Binding OpenChatCommad}" HorizontalAlignment="Left" Margin="224,415,0,0" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="logoutButton" Content="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="499,415,0,0" VerticalAlignment="Top" Width="75"/>
-
+        </Grid>
+        </Border>
     </Grid>
 </Page>
