@@ -21,8 +21,8 @@ namespace BackgammonClient.ViewModels
 
 
         public ICommand LogoutCommand { get; set; }
-        public ICommand OpenChatCommad { get; set; }
-        public ICommand OpenGameCommad { get; set; }
+        public ICommand OpenChatCommand { get; set; }
+        public ICommand OpenGameCommand { get; set; }
         public UserForView ChosenContact { get; set; }
 
         ClientUserManager _userManager;
@@ -52,8 +52,8 @@ namespace BackgammonClient.ViewModels
             _chatManager.RegisterChatRequestEvent(AgreeChatRequest);
 
             LogoutCommand = new RelayCommand(Logout);
-            OpenChatCommad = new RelayCommand(OpenChat);
-            OpenGameCommad = new RelayCommand(OpenGame);
+            OpenChatCommand = new RelayCommand(OpenChat);
+            OpenGameCommand = new RelayCommand(OpenGame);
         }
 
 
@@ -119,9 +119,14 @@ namespace BackgammonClient.ViewModels
             }
         }
 
+        //private void OpenChat()
+        //{
+        //    Open(true);
+        //}
 
         private void OpenGame()
         {
+            OpenChat();
             Application.Current.MainWindow.Content = new GamePage();
         }
 
