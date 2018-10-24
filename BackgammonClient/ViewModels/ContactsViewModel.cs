@@ -18,7 +18,7 @@ namespace BackgammonClient.ViewModels
 {
     class ContactsViewModel : ViewModelPropertyChanged
     {
-
+        private bool isChat;
 
         public ICommand LogoutCommand { get; set; }
         public ICommand OpenChatCommand { get; set; }
@@ -65,7 +65,7 @@ namespace BackgammonClient.ViewModels
         }
 
         //Sand request to another user to chat with him.
-        private void OpenChat()
+        private void Open(bool isChat)
         {
             if (ChosenContact != null)
             {
@@ -81,7 +81,7 @@ namespace BackgammonClient.ViewModels
                 {
                     ClientUserManager.UserToChatWith = ChosenContact.UserName;
                     _userManager.ChangeUserStatus(UserState.busy);
-                    _chatManager.SendChatRequest();
+                    _chatManager.SendRequest(isChat);
                 }
             }
             else
@@ -91,11 +91,14 @@ namespace BackgammonClient.ViewModels
         }
 
         //For reciver, after he agree to chat request.
-        private void AgreeChatRequest()
+        private void AgreeChatRequest(bool isChat)
         {
+
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                Application.Current.MainWindow.Content = new ChatPage();
+                if (isChat) Application.Current.MainWindow.Content = new ChatPage();
+                else Application.Current.MainWindow.Content = new GamePage();
+
             }));
 
         }
@@ -107,7 +110,8 @@ namespace BackgammonClient.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Application.Current.MainWindow.Content = new ChatPage();
+                    if (isChat) Application.Current.MainWindow.Content = new ChatPage();
+                    else Application.Current.MainWindow.Content = new GamePage();
                 }));
             }
             else
@@ -119,15 +123,16 @@ namespace BackgammonClient.ViewModels
             }
         }
 
-        //private void OpenChat()
-        //{
-        //    Open(true);
-        //}
+        private void OpenChat()
+        {
+            isChat = true;
+            Open(isChat);
+        }
 
         private void OpenGame()
         {
-            OpenChat();
-            Application.Current.MainWindow.Content = new GamePage();
+            isChat = false;
+            Open(false);
         }
 
         //Logout to register page.

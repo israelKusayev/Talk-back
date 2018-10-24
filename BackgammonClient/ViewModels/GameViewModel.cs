@@ -1,4 +1,6 @@
-﻿using BackgammonClient.Utils;
+﻿using BackgammonClient.BL;
+using BackgammonClient.Utils;
+using General.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,10 +16,12 @@ namespace BackgammonClient.ViewModels
 {
     class GameViewModel : ViewModelPropertyChanged
     {
-        //private readonly int[] _cellsOrganizer;
+        private ClientGameManager _gameManager;
+
         private readonly int[,] _blackCheckers;
         private readonly int[,] _blueCheckers;
-        public ICommand ClickMe { get; set; }
+        private readonly string[] _DiceImgPath;
+        public ICommand RollDiceCommand { get; set; }
         private ObservableCollection<Ellipse>[] _cells;
         public ObservableCollection<Ellipse>[] Cells
         {
@@ -28,24 +32,49 @@ namespace BackgammonClient.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private string _imgCube1;
+        public string ImgCube1
+        {
+            get { return _imgCube1; }
+            set
+            {
+                _imgCube1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _imgCube2;
+        public string ImgCube2
+        {
+            get { return _imgCube2; }
+            set
+            {
+                _imgCube2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        // ctor
         public GameViewModel()
         {
-            _blueCheckers = new int[,]
-            {
-                {0,5},
-                {11,2},
-                {17,5},
-                {19,3}
-            };
-
             _blackCheckers = new int[,]
             {
-                {4,3},
-                {6,5},
-                {12,2},
-                {23,5}
+                {0,2},
+                {11,5},
+                {16,3},
+                {18,5}
             };
 
+            _blueCheckers = new int[,]
+            {
+                {5,5},
+                {7,3},
+                {12,5},
+                {23,2}
+            };
+            //_DiceImgPath = new string[6] { "/Assets/Die_1.jpg", "/Assets/Die_2.jpg", "/Assets/Die_3.jpg", "/Assets/Die_4.jpg", "/Assets/Die_5.jpg", "/Assets/Die_6.jpg" };
             Cells = new ObservableCollection<Ellipse>[24];
             for (int i = 0; i < 24; i++)
             {
@@ -54,6 +83,22 @@ namespace BackgammonClient.ViewModels
 
             InitializeCheckers();
 
+            RollDiceCommand = new RelayCommand(RollDice);
+            _gameManager = new ClientGameManager();
+            _gameManager.RegisterGetDiceEvent(GetRivalDiceResult);
+        }
+
+        private void RollDice()
+        {
+            Dice dice = _gameManager.RollDice();
+            ImgCube1 = $"/Assets/Die_{dice.Die1}.jpg";
+            ImgCube2 = $"/Assets/Die_{dice.Die2}.jpg";
+        }
+
+        private void GetRivalDiceResult(Dice dice)
+        {
+            ImgCube1 = $"/Assets/Die_{dice.Die1}.jpg";
+            ImgCube2 = $"/Assets/Die_{dice.Die2}.jpg";
         }
 
         private void InitializeCheckers()

@@ -6,6 +6,7 @@ using System.Web;
 using BackgammonServer.BL;
 using BackgammonServer.Models;
 using General.Emuns;
+using General.Models;
 using Microsoft.AspNet.SignalR;
 
 namespace BackgammonServer.Hubs
@@ -13,7 +14,7 @@ namespace BackgammonServer.Hubs
     public class MainHub : Hub
     {
         ServerUserManager _userManager = ServerUserManager.Instance;
-
+        ServerGameManager _gameManager = ServerGameManager.Instance;
         #region User
 
         // Register. 
@@ -65,17 +66,20 @@ namespace BackgammonServer.Hubs
 
         #region Chat request
         // Send chat request to second user.
-        public void SendChatRequest(string reciverName, string senderName)
+        public void SendRequest(string reciverName, string senderName, bool isChat)
         {
             string conectionId = _userManager.GetConectionId(reciverName);
-            Clients.Client(conectionId).chatRequest(senderName);
+            Clients.Client(conectionId).InteractionRequest(senderName, isChat);
         }
 
         // Get the response from the second user.
         public void HandleInvitationResult(bool response, string senderName, string reciverName)
         {
+
             if (response)
             {
+                ChangeUserStatus(reciverName, UserState.busy);
+                _gameManager.currentTurn = senderName;
                 _userManager.AddNewPaier(senderName, reciverName);
             }
             string conectionId = _userManager.GetConectionId(senderName);
@@ -123,7 +127,13 @@ namespace BackgammonServer.Hubs
         }
 
         #region Game
-
+        public Dice RollDice(string userToChatWith)
+        {
+            Dice result = _gameManager.RollDice();
+            string conectionId = _userManager.GetConectionId(userToChatWith);
+            Clients.Client(conectionId).getDiceResult(result);
+            return result;
+        }
         #endregion
     }
 }

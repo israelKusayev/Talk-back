@@ -123,17 +123,38 @@
                 <StackPanel Grid.Column="13" Grid.Row="3" VerticalAlignment="Bottom">
                     <ItemsControl ItemsSource="{Binding Cells[12]}"></ItemsControl>
                 </StackPanel>
+                
+                
 
 
 
-                <StackPanel Grid.Column="7" Grid.Row="1">
-                    <ItemsControl ItemsSource="{Binding Cubes1}"></ItemsControl>
+                <StackPanel Grid.Column="7" Grid.Row="1" VerticalAlignment="Center">
+                    <Button Width="30" Height="30" Command="{Binding RollDice}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding ImgCube1}"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="30" Height="30" Command="{Binding RollDice}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding ImgCube2}"/>
+                        </Button.Background>
+                    </Button>
                 </StackPanel>
-                <StackPanel Grid.Column="7" Grid.Row="3">
-                    <ItemsControl ItemsSource="{Binding Cubes2}"></ItemsControl>
+                <StackPanel Grid.Column="7" Grid.Row="3" VerticalAlignment="Center">
+                    <Button Width="30" Height="30" Command="{Binding RollDiceCommand}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding ImgCube1}"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="30" Height="30" Command="{Binding RollDiceCommand}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding ImgCube2}"/>
+                        </Button.Background>
+
+                    </Button>
                 </StackPanel>
                 <StackPanel Grid.Column="7" Grid.Row="2">
-                    <ItemsControl ItemsSource="{Binding Eatan}"></ItemsControl>
+                   
                 </StackPanel>
 
             </Grid>

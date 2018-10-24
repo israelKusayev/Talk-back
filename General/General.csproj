@@ -42,11 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Emuns\UserState.cs" />
+    <Compile Include="Interfaces\IGameBoardState.cs" />
     <Compile Include="Interfaces\IUser.cs" />
+    <Compile Include="Models\Dice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

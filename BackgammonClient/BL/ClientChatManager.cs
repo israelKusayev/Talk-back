@@ -12,7 +12,7 @@ namespace BackgammonClient.BL
 {
     public delegate void SendMessageEventHandler(string message, string senderName);
     public delegate void InvitationResponseEventHandler(bool response);
-    public delegate void ChatRequestEventHandler();
+    public delegate void InteractionRequestEventHandler(bool isChat);
     public delegate void UserDisconnectedEventHandler();
 
     class ClientChatManager
@@ -20,7 +20,7 @@ namespace BackgammonClient.BL
         #region Events
         private event SendMessageEventHandler _sendMessageEvent;
         private event InvitationResponseEventHandler _invitationResponseEvent;
-        private event ChatRequestEventHandler _ChatRequestEvent;
+        private event InteractionRequestEventHandler _ChatRequestEvent;
         private event UserDisconnectedEventHandler _userDisconnectedEvent;
         #endregion 
 
@@ -32,18 +32,19 @@ namespace BackgammonClient.BL
 
 
             //for reciver
-            _server.Proxy.On("chatRequest", (string senderName) =>
+            _server.Proxy.On("InteractionRequest", (string senderName, bool isChat) =>
             {
-                //Application.Current.Dispatcher.Invoke(() =>
-                //{
-
-                //});
-                MessageBoxResult result = MessageBox.Show($"{senderName} invite you to chat", "Chat request", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                string gameOrChat = isChat ? "chat" : "game";
+                MessageBoxResult result = MessageBox.Show($"{senderName} invite you to {gameOrChat}", $"{gameOrChat} request", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 bool boolResult = result == MessageBoxResult.Yes ? true : false;
                 if (boolResult)
                 {
+                    if (!isChat)
+                    {
+                        //ClientGameManager.GameKey = _server.Proxy.Invoke<string>("InitializeBoardGame", senderName, ClientUserManager.CurrentUser).Result;
+                    }
                     ClientUserManager.UserToChatWith = senderName;
-                    _ChatRequestEvent?.Invoke();//open reciver chat.
+                    _ChatRequestEvent?.Invoke(isChat);//open reciver chat/game.
                 }
                 else
                 {
@@ -83,11 +84,11 @@ namespace BackgammonClient.BL
         }
 
         //Send chat request to second user.
-        internal void SendChatRequest()
+        internal void SendRequest(bool isChat)
         {
             Task task = Task.Run(async () =>
             {
-                await _server.Proxy.Invoke("SendChatRequest", ClientUserManager.UserToChatWith, ClientUserManager.CurrentUser);
+                await _server.Proxy.Invoke("SendRequest", ClientUserManager.UserToChatWith, ClientUserManager.CurrentUser, isChat);
             });
             task.ConfigureAwait(false);
             task.Wait();
@@ -123,7 +124,7 @@ namespace BackgammonClient.BL
         {
             _invitationResponseEvent += HandleResponse;
         }
-        public void RegisterChatRequestEvent(ChatRequestEventHandler onChatRequestEvent)
+        public void RegisterChatRequestEvent(InteractionRequestEventHandler onChatRequestEvent)
         {
             _ChatRequestEvent += onChatRequestEvent;
         }

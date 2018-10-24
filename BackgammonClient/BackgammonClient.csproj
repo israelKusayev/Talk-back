@@ -62,6 +62,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BL\ClientChatManager.cs" />
+    <Compile Include="BL\ClientGameManager.cs" />
     <Compile Include="BL\InitilaizeProxy.cs" />
     <Compile Include="Converters\ConvertUserForUserView.cs" />
     <Compile Include="Models\UserForView.cs" />
@@ -156,6 +157,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\backgammon background.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\DIe_1.jpg" />
+    <Resource Include="Assets\DIe_2.jpg" />
+    <Resource Include="Assets\Die_3.jpg" />
+    <Resource Include="Assets\Die_4.jpg" />
+    <Resource Include="Assets\DIe_5.jpg" />
+    <Resource Include="Assets\Die_6.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
