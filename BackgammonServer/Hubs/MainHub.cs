@@ -6,6 +6,7 @@ using System.Web;
 using BackgammonServer.BL;
 using BackgammonServer.Models;
 using General.Emuns;
+using General.Interfaces;
 using General.Models;
 using Microsoft.AspNet.SignalR;
 
@@ -73,7 +74,7 @@ namespace BackgammonServer.Hubs
         }
 
         // Get the response from the second user.
-        public void HandleInvitationResult(bool response, string senderName, string reciverName)
+        public void HandleInvitationResult(bool response, string senderName, string reciverName, string gameKey)
         {
 
             if (response)
@@ -83,7 +84,7 @@ namespace BackgammonServer.Hubs
                 _userManager.AddNewPaier(senderName, reciverName);
             }
             string conectionId = _userManager.GetConectionId(senderName);
-            Clients.Client(conectionId).getInvitationResult(response);
+            Clients.Client(conectionId).getInvitationResult(response, gameKey);
         }
 
         #endregion
@@ -133,6 +134,18 @@ namespace BackgammonServer.Hubs
             string conectionId = _userManager.GetConectionId(userToChatWith);
             Clients.Client(conectionId).getDiceResult(result);
             return result;
+        }
+
+
+        public string InitializeBoardGame(string senderName, string reciverName)
+        {
+            var s = _gameManager.InitializeBoard(senderName, reciverName);
+            return s;
+        }
+
+        public IGameBoardState GetGameBoard(string gameKey)
+        {
+            return _gameManager.GetGameBoard(gameKey);
         }
         #endregion
     }

@@ -41,7 +41,12 @@ namespace BackgammonClient.BL
                 {
                     if (!isChat)
                     {
-                        //ClientGameManager.GameKey = _server.Proxy.Invoke<string>("InitializeBoardGame", senderName, ClientUserManager.CurrentUser).Result;
+                        Task<string> t = Task.Run(async () =>
+                        {
+                            return await _server.Proxy.Invoke<string>("InitializeBoardGame", senderName, ClientUserManager.CurrentUser);
+                        });
+                        t.ConfigureAwait(false);
+                        ClientGameManager.GameKey = t.Result;
                     }
                     ClientUserManager.UserToChatWith = senderName;
                     _ChatRequestEvent?.Invoke(isChat);//open reciver chat/game.
@@ -52,7 +57,7 @@ namespace BackgammonClient.BL
                 }
                 Task task = Task.Run(async () =>
                 {
-                    await _server.Proxy.Invoke("HandleInvitationResult", result, senderName, ClientUserManager.CurrentUser);
+                    await _server.Proxy.Invoke("HandleInvitationResult", result, senderName, ClientUserManager.CurrentUser, ClientGameManager.GameKey);
                 });
                 task.ConfigureAwait(false);
                 //task.Wait();//worker thread.
@@ -60,8 +65,9 @@ namespace BackgammonClient.BL
 
 
             //for sender
-            _server.Proxy.On("getInvitationResult", (bool userResponse) =>
+            _server.Proxy.On("getInvitationResult", (bool userResponse, string gameKey) =>
             {
+                ClientGameManager.GameKey = gameKey;
                 _invitationResponseEvent?.Invoke(userResponse);
             });
 

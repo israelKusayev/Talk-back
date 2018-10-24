@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BackgammonClient.Models;
+using General.Interfaces;
 using General.Models;
 using Microsoft.AspNet.SignalR.Client;
 
@@ -12,7 +14,7 @@ namespace BackgammonClient.BL
     class ClientGameManager
     {
         public static string GameKey { get; set; }
-        
+
         internal static bool isMyTurn;//?
         private InitilaizeProxy _server = InitilaizeProxy.Instance;
 
@@ -40,5 +42,15 @@ namespace BackgammonClient.BL
         {
             GetDiceEvent += getDiceEvent;
         }
+
+        internal GameBoardState GetBoardState()
+        {
+            Task<IGameBoardState> task = Task.Run(async () =>
+            {
+                return await _server.Proxy.Invoke<IGameBoardState>("GetGameBoard", GameKey);
+            });
+            return (GameBoardState)task.Result;
+        }
     }
 }
+

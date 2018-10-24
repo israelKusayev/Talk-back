@@ -65,6 +65,7 @@
     <Compile Include="BL\ClientGameManager.cs" />
     <Compile Include="BL\InitilaizeProxy.cs" />
     <Compile Include="Converters\ConvertUserForUserView.cs" />
+    <Compile Include="Models\GameBoardState.cs" />
     <Compile Include="Models\UserForView.cs" />
     <Compile Include="Utils\ChatMessageFormatter.cs" />
     <Compile Include="Utils\RelayCommand.cs" />

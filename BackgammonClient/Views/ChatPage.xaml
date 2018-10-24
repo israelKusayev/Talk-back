@@ -17,7 +17,7 @@
         </Border>
         <TextBox x:Name="massageTextBox" Text="{Binding Message}"  HorizontalAlignment="Left" Height="59" Margin="40,332,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="639"/>
         <Button x:Name="button" Content="Send" Command="{Binding SendMessageCommand}" HorizontalAlignment="Left" Margin="701,349,0,0" VerticalAlignment="Top" Width="58" Height="27" Cursor="ScrollW" RenderTransformOrigin="0.706,0.493"/>
-        <Button x:Name="button1" Command="{Binding BackCommand}"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="23" Margin="769,0,0,0" >
+        <Button x:Name="button1" Command="{Binding BackCommand}"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="23" Margin="758,0,0,0" >
             <Button.Background>
                 <ImageBrush ImageSource="/BackgammonClient;component/Assets/X.png"/>
             </Button.Background>

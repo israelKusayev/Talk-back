@@ -11,16 +11,16 @@
 
     <Grid Background="White">
         <Border  HorizontalAlignment="Center" VerticalAlignment="Center"  BorderBrush="Black" BorderThickness="1">
-            <Grid Background="LightGray" Height="450" Width="400">
-            
-        <Label x:Name="TitleLabel" Content="Register" HorizontalAlignment="Left" Margin="162,56,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="20" FontFamily="High Tower Text"/>
-        <Label x:Name="userNameLabel" Content="User name" HorizontalAlignment="Left" Margin="74,120,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="PasswordLabel" Content="Password" HorizontalAlignment="Left" Margin="74,206,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="userNameTextBox" HorizontalAlignment="Left" Height="23" Margin="74,151,0,0" TextWrapping="Wrap" Text="{Binding User.UserName}" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Height="23" Margin="74,237,0,0" TextWrapping="Wrap" Text="{Binding User.Password}" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="registerButton" Command="{Binding RegisterCommand}" Content="Register" HorizontalAlignment="Left" Margin="74,316,0,0" VerticalAlignment="Top" Width="120" Height="29"/>
-        <Button x:Name="loginButton" Command="{Binding LoginCommand}" Content="Login" HorizontalAlignment="Left" Margin="200,316,0,0" VerticalAlignment="Top" Width="120" Height="29"/>
-        </Grid>
+            <Grid Background="LightGray" Height="450" Width="400" >
+
+                <Label x:Name="TitleLabel" Content="Register" HorizontalAlignment="Left" Margin="148,56,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="25" FontFamily="High Tower Text"/>
+                <Label x:Name="userNameLabel" Content="User name" HorizontalAlignment="Left" Margin="74,120,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="PasswordLabel" Content="Password" HorizontalAlignment="Left" Margin="74,206,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="userNameTextBox"  HorizontalAlignment="Left" Height="23" Margin="74,151,0,0" TextWrapping="Wrap" Text="{Binding User.UserName}" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Height="23" Margin="74,237,0,0" TextWrapping="Wrap" Text="{Binding User.Password}" VerticalAlignment="Top" Width="120"/>
+                <Button x:Name="registerButton" Command="{Binding RegisterCommand}" Content="Register" HorizontalAlignment="Left" Margin="74,316,0,0" VerticalAlignment="Top" Width="120" Height="29"/>
+                <Button x:Name="loginButton" Command="{Binding LoginCommand}" Content="Login" HorizontalAlignment="Left" Margin="200,316,0,0" VerticalAlignment="Top" Width="120" Height="24"/>
+            </Grid>
         </Border>
     </Grid>
 </Page>

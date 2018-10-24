@@ -1,4 +1,5 @@
 ﻿using BackgammonClient.BL;
+using BackgammonClient.Models;
 using BackgammonClient.Utils;
 using General.Models;
 using System;
@@ -54,34 +55,42 @@ namespace BackgammonClient.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        GameBoardState gameBoard;
 
         // ctor
         public GameViewModel()
         {
-            _blackCheckers = new int[,]
-            {
-                {0,2},
-                {11,5},
-                {16,3},
-                {18,5}
-            };
-
-            _blueCheckers = new int[,]
-            {
-                {5,5},
-                {7,3},
-                {12,5},
-                {23,2}
-            };
-            //_DiceImgPath = new string[6] { "/Assets/Die_1.jpg", "/Assets/Die_2.jpg", "/Assets/Die_3.jpg", "/Assets/Die_4.jpg", "/Assets/Die_5.jpg", "/Assets/Die_6.jpg" };
             Cells = new ObservableCollection<Ellipse>[24];
             for (int i = 0; i < 24; i++)
             {
                 Cells[i] = new ObservableCollection<Ellipse>();
             }
+            gameBoard = _gameManager.GetBoardState();
 
-            InitializeCheckers();
+
+            for (int i = 1; i < 25; i++)
+            {
+                if (gameBoard.WhiteCheckersLocation.ContainsKey(i))
+                {
+                    for (int j = 0; j < gameBoard.WhiteCheckersLocation[i]; j++)
+                    {
+                        _cells[i].Add(CreateChecker(false));
+                    }
+                }
+            }
+
+            for (int i = 1; i < 25; i++)
+            {
+                if (gameBoard.BlackCheckersLocation.ContainsKey(i))
+                {
+                    for (int j = 0; j < gameBoard.BlackCheckersLocation[i]; j++)
+                    {
+                        _cells[i].Add(CreateChecker(false));
+                    }
+                }
+            }
+
+            //InitializeCheckers();
 
             RollDiceCommand = new RelayCommand(RollDice);
             _gameManager = new ClientGameManager();
