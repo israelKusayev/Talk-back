@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -94,7 +95,7 @@ namespace BackgammonClient.ViewModels
         private void AgreeChatRequest(bool isChat)
         {
 
-            Application.Current.Dispatcher.Invoke(new Action(() =>
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (isChat) Application.Current.MainWindow.Content = new ChatPage();
                 else Application.Current.MainWindow.Content = new GamePage();
@@ -108,7 +109,7 @@ namespace BackgammonClient.ViewModels
         {
             if (response)
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     if (isChat) Application.Current.MainWindow.Content = new ChatPage();
                     else Application.Current.MainWindow.Content = new GamePage();

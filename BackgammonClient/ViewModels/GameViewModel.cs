@@ -22,6 +22,8 @@ namespace BackgammonClient.ViewModels
         private readonly int[,] _blackCheckers;
         private readonly int[,] _blueCheckers;
         private readonly string[] _DiceImgPath;
+
+        public int RotatedBoard { get; set; }
         public ICommand RollDiceCommand { get; set; }
         private ObservableCollection<Ellipse>[] _cells;
         public ObservableCollection<Ellipse>[] Cells
@@ -60,15 +62,17 @@ namespace BackgammonClient.ViewModels
         // ctor
         public GameViewModel()
         {
+            _gameManager = new ClientGameManager();
             Cells = new ObservableCollection<Ellipse>[24];
             for (int i = 0; i < 24; i++)
             {
                 Cells[i] = new ObservableCollection<Ellipse>();
             }
+
             gameBoard = _gameManager.GetBoardState();
 
 
-            for (int i = 1; i < 25; i++)
+            for (int i = 0; i < 24; i++)
             {
                 if (gameBoard.WhiteCheckersLocation.ContainsKey(i))
                 {
@@ -78,16 +82,20 @@ namespace BackgammonClient.ViewModels
                     }
                 }
             }
-
-            for (int i = 1; i < 25; i++)
+            for (int i = 0; i < 24; i++)
             {
                 if (gameBoard.BlackCheckersLocation.ContainsKey(i))
                 {
                     for (int j = 0; j < gameBoard.BlackCheckersLocation[i]; j++)
                     {
-                        _cells[i].Add(CreateChecker(false));
+                        _cells[i].Add(CreateChecker(true));
                     }
                 }
+            }
+
+            if (gameBoard.CurrentPlayer != ClientUserManager.CurrentUser)
+            {
+                RotatedBoard = 180;
             }
 
             //InitializeCheckers();

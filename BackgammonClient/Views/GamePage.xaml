@@ -8,7 +8,15 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="GamePage">
 
-    <Grid>
+    <Grid RenderTransformOrigin="0.5,0.5">
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform Angle="{Binding RotatedBoard}"/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.RenderTransform>
 
         <Grid.Background>
             <ImageBrush ImageSource="/BackgammonClient;component/Assets/X.png"/>
@@ -123,8 +131,8 @@
                 <StackPanel Grid.Column="13" Grid.Row="3" VerticalAlignment="Bottom">
                     <ItemsControl ItemsSource="{Binding Cells[12]}"></ItemsControl>
                 </StackPanel>
-                
-                
+
+
 
 
 
@@ -154,7 +162,7 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Grid.Column="7" Grid.Row="2">
-                   
+
                 </StackPanel>
 
             </Grid>

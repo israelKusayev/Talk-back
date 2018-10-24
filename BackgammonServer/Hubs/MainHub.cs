@@ -74,7 +74,7 @@ namespace BackgammonServer.Hubs
         }
 
         // Get the response from the second user.
-        public void HandleInvitationResult(bool response, string senderName, string reciverName, string gameKey)
+        public void HandleInvitationResult(bool response, string senderName, string reciverName)
         {
 
             if (response)
@@ -84,7 +84,8 @@ namespace BackgammonServer.Hubs
                 _userManager.AddNewPaier(senderName, reciverName);
             }
             string conectionId = _userManager.GetConectionId(senderName);
-            Clients.Client(conectionId).getInvitationResult(response, gameKey);
+            Clients.Client(conectionId).getInvitationResult(response);
+            
         }
 
         #endregion
@@ -137,15 +138,21 @@ namespace BackgammonServer.Hubs
         }
 
 
-        public string InitializeBoardGame(string senderName, string reciverName)
+        public void InitializeBoardGame(string senderName, string reciverName)
         {
-            var s = _gameManager.InitializeBoard(senderName, reciverName);
-            return s;
+            _gameManager.InitializeBoard(senderName, reciverName);
+            
+        }
+
+        public string  GetGameKey(string senderName,string ReciverName)
+        {
+            return _gameManager.GetGameKey(senderName, ReciverName);
         }
 
         public IGameBoardState GetGameBoard(string gameKey)
         {
-            return _gameManager.GetGameBoard(gameKey);
+            var r =  _gameManager.GetGameBoard(gameKey);
+            return r;
         }
         #endregion
     }

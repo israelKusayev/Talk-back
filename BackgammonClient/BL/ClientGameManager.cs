@@ -13,7 +13,7 @@ namespace BackgammonClient.BL
     delegate void GetDiceEventHandler(Dice dice);
     class ClientGameManager
     {
-        public static string GameKey { get; set; }
+        public string GameKey { get; set; }
 
         internal static bool isMyTurn;//?
         private InitilaizeProxy _server = InitilaizeProxy.Instance;
@@ -27,6 +27,19 @@ namespace BackgammonClient.BL
                  GetDiceEvent?.Invoke(dice);
              });
             _server.HubConnection.Start().Wait();
+            Task<string> task = Task.Run(async () =>
+            {
+                return await _server.Proxy.Invoke<string>("GetGameKey", ClientUserManager.CurrentUser, ClientUserManager.UserToChatWith);
+
+            });
+            GameKey = task.Result;
+            /*.ContinueWith(continuedTask => GameKey = continuedTask.Result);*/
+
+        }
+
+        async Task<string> GetKey()
+        {
+            return await _server.Proxy.Invoke<string>("GetGameKey", ClientUserManager.CurrentUser, ClientUserManager.UserToChatWith);
         }
 
         internal Dice RollDice()
@@ -45,11 +58,13 @@ namespace BackgammonClient.BL
 
         internal GameBoardState GetBoardState()
         {
-            Task<IGameBoardState> task = Task.Run(async () =>
+            Task<GameBoardState> task = Task.Run(async () =>
             {
-                return await _server.Proxy.Invoke<IGameBoardState>("GetGameBoard", GameKey);
+                return await _server.Proxy.Invoke<GameBoardState>("GetGameBoard", GameKey);
             });
-            return (GameBoardState)task.Result;
+
+            task.Wait();//?
+            return task.Result;
         }
     }
 }

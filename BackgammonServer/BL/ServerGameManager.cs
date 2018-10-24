@@ -40,17 +40,22 @@ namespace BackgammonServer.BL
             return new Dice() { Die1 = rand.Next(1, 7), Die2 = rand.Next(1, 7) };
         }
 
-        internal string InitializeBoard(string senderName, string reciverName)
+        internal void InitializeBoard(string senderName, string reciverName)
         {
-            string guid = Guid.NewGuid().ToString();
+            string guid = senderName;
             GameBoardState gameBoard = new GameBoardState(senderName, reciverName);
             _boards.Add(guid, gameBoard);
-            return guid;
+
         }
 
         internal IGameBoardState GetGameBoard(string gameKey)
         {
             return _boards[gameKey];
+        }
+
+        internal string GetGameKey(string senderName, string reciverName)
+        {
+            return _boards.ContainsKey(senderName) ? senderName : reciverName;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace BackgammonServer.Models
             BlackPlayer = blackPlayer;
 
             BlackConectionId = _userManager.GetConectionId(blackPlayer);
-            BlackConectionId = _userManager.GetConectionId(whitePlayer);
+            WhiteConectionId = _userManager.GetConectionId(whitePlayer);
 
             InitializeBoardGame();
         }
