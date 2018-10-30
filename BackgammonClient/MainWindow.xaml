@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BackgammonClient"
         mc:Ignorable="d"
         
-        Title="MainWindow" Height="550" Width="800">
+        Title="MainWindow" Height="530" Width="805">
     <Grid>
         <Frame Source="Views/RegisterPage.xaml"></Frame>
     </Grid>

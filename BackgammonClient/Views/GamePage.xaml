@@ -5,24 +5,15 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BackgammonClient.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="480" d:DesignWidth="800"
       Title="GamePage">
 
-    <Grid RenderTransformOrigin="0.5,0.5">
-        <Grid.RenderTransform>
-            <TransformGroup>
-                <ScaleTransform/>
-                <SkewTransform/>
-                <RotateTransform Angle="{Binding RotatedBoard}"/>
-                <TranslateTransform/>
-            </TransformGroup>
-        </Grid.RenderTransform>
-
+    <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/BackgammonClient;component/Assets/X.png"/>
         </Grid.Background>
         <Border HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" Grid.RowSpan="2">
-            <Grid Width="800" Height="450">
+            <Grid Width="800" Height="450" >
                 <Grid.Background>
                     <ImageBrush ImageSource="/BackgammonClient;component/backgammon background.gif"/>
                 </Grid.Background>
@@ -53,12 +44,8 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Column="1" Grid.Row="1">
-                    <ItemsControl ItemsSource="{Binding Cells[0]}">
-                        <!--<DataTemplate></DataTemplate>-->
-                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding Cells[0]}"></ItemsControl>
                 </StackPanel>
-
-
                 <StackPanel Grid.Column="2" Grid.Row="1">
                     <ItemsControl ItemsSource="{Binding Cells[1]}"></ItemsControl>
                 </StackPanel>
@@ -74,10 +61,10 @@
                 <StackPanel Grid.Column="6" Grid.Row="1">
                     <ItemsControl ItemsSource="{Binding Cells[5]}"></ItemsControl>
                 </StackPanel>
-                <StackPanel Grid.Column="8" Grid.Row="1">
+                <StackPanel  Grid.Column="8" Grid.Row="1" >
                     <ItemsControl ItemsSource="{Binding Cells[6]}"></ItemsControl>
                 </StackPanel>
-                <StackPanel Grid.Column="9" Grid.Row="1">
+                <StackPanel Grid.Column="9" Grid.Row="1" >
                     <ItemsControl ItemsSource="{Binding Cells[7]}"></ItemsControl>
                 </StackPanel>
                 <StackPanel Grid.Column="10" Grid.Row="1">
@@ -119,7 +106,7 @@
                 <StackPanel Grid.Column="9" Grid.Row="3" VerticalAlignment="Bottom">
                     <ItemsControl ItemsSource="{Binding Cells[16]}"></ItemsControl>
                 </StackPanel>
-                <StackPanel Grid.Column="10" Grid.Row="3" VerticalAlignment="Bottom">
+                <StackPanel Grid.Column="10" Grid.Row="3" VerticalAlignment="Bottom" >
                     <ItemsControl ItemsSource="{Binding Cells[15]}"></ItemsControl>
                 </StackPanel>
                 <StackPanel Grid.Column="11" Grid.Row="3" VerticalAlignment="Bottom">
@@ -132,29 +119,50 @@
                     <ItemsControl ItemsSource="{Binding Cells[12]}"></ItemsControl>
                 </StackPanel>
 
-
-
-
+                <Button Grid.Column="1" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="0"  Opacity="0"   ></Button>
+                <Button Grid.Column="2" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="1"  Opacity="0"  ></Button>
+                <Button Grid.Column="3" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="2"  Opacity="0"  ></Button>
+                <Button Grid.Column="4" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="3"  Opacity="0"  ></Button>
+                <Button Grid.Column="5" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="4"  Opacity="0"  ></Button>
+                <Button Grid.Column="6" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="5"  Opacity="0"  ></Button>
+                <Button Grid.Column="8" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="6"  Opacity="0"  ></Button>
+                <Button Grid.Column="9" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="7"  Opacity="0"  ></Button>
+                <Button Grid.Column="10" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="8"  Opacity="0"  ></Button>
+                <Button Grid.Column="11" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="9"  Opacity="0"  ></Button>
+                <Button Grid.Column="12" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="10"  Opacity="0"  ></Button>
+                <Button Grid.Column="13" Grid.Row="1"  Command="{Binding ChooseCheckerCommand}" CommandParameter="11"  Opacity="0"  ></Button>
+                <Button Grid.Column="1" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="23"  Opacity="0"  ></Button>
+                <Button Grid.Column="2" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="22"  Opacity="0"  ></Button>
+                <Button Grid.Column="3" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="21"  Opacity="0"  ></Button>
+                <Button Grid.Column="4" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="20"  Opacity="0"  ></Button>
+                <Button Grid.Column="5" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="19"  Opacity="0"  ></Button>
+                <Button Grid.Column="6" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="18"  Opacity="0"  ></Button>
+                <Button Grid.Column="8" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="17"  Opacity="0"  ></Button>
+                <Button Grid.Column="9" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}"  CommandParameter="16"  Opacity="0"  ></Button>
+                <Button Grid.Column="10" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}" CommandParameter="15"  Opacity="0"  ></Button>
+                <Button Grid.Column="11" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}" CommandParameter="14"  Opacity="0"  ></Button>
+                <Button Grid.Column="12" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}" CommandParameter="13"  Opacity="0"  ></Button>
+                <Button Grid.Column="13" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}" CommandParameter="12"  Opacity="0"  ></Button>
 
                 <StackPanel Grid.Column="7" Grid.Row="1" VerticalAlignment="Center">
-                    <Button Width="30" Height="30" Command="{Binding RollDice}">
+                    <Button Width="30" Height="30"   Visibility="{Binding DiceVisibilityGroup2}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube1}"/>
                         </Button.Background>
                     </Button>
-                    <Button Width="30" Height="30" Command="{Binding RollDice}">
+                    <Button Width="30" Height="30"  Visibility="{Binding DiceVisibilityGroup2}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube2}"/>
                         </Button.Background>
                     </Button>
                 </StackPanel>
                 <StackPanel Grid.Column="7" Grid.Row="3" VerticalAlignment="Center">
-                    <Button Width="30" Height="30" Command="{Binding RollDiceCommand}">
+                    <Button Width="30" Height="30" Visibility="{Binding DiceVisibilityGroup1}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube1}"/>
                         </Button.Background>
                     </Button>
-                    <Button Width="30" Height="30" Command="{Binding RollDiceCommand}">
+                    <Button Width="30" Height="30 "  Visibility="{Binding DiceVisibilityGroup1}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube2}"/>
                         </Button.Background>
@@ -164,6 +172,7 @@
                 <StackPanel Grid.Column="7" Grid.Row="2">
 
                 </StackPanel>
+                <TextBlock x:Name="textBlock" TextAlignment="Center" FontWeight="Medium"  HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding UserTitle}" VerticalAlignment="Top" Height="15" Width="620"  Grid.ColumnSpan="11" Grid.Column="2"/>
 
             </Grid>
 

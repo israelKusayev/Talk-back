@@ -10,6 +10,8 @@ namespace BackgammonServer.Models
 {
     public class GameBoardState : IGameBoardState
     {
+
+        //black is asc// white is desc;
         public Dictionary<int, int> BlackCheckersLocation { get; set; }
         public Dictionary<int, int> WhiteCheckersLocation { get; set; }
         public Dice Dice { get; set; }
@@ -17,9 +19,11 @@ namespace BackgammonServer.Models
         public string CurrentPlayer { get; set; }
         public int BarredBlackCheckers { get; set; }
         public int BarredWhiteCheckers { get; set; }
+        public string BlackPlayer { get; set; }
+        public string WhitePlayer { get; set; }
+        public int MoveFrom { get; set; }
+        public int MoveTo { get; set; }
 
-        internal readonly string BlackPlayer;
-        internal readonly string WhitePlayer;
         internal readonly string BlackConectionId;
         internal readonly string WhiteConectionId;
 
@@ -33,6 +37,10 @@ namespace BackgammonServer.Models
             WhiteConectionId = _userManager.GetConectionId(whitePlayer);
 
             InitializeBoardGame();
+        }
+
+        public GameBoardState()
+        {
         }
 
         private void InitializeBoardGame()

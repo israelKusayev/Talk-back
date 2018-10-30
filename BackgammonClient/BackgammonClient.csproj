@@ -69,6 +69,7 @@
     <Compile Include="Models\UserForView.cs" />
     <Compile Include="Utils\ChatMessageFormatter.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
+    <Compile Include="Utils\RelayCommndWithParams.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\ContactsViewModel.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />

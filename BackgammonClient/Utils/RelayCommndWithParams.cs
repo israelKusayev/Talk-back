@@ -7,16 +7,15 @@ using System.Windows.Input;
 
 namespace BackgammonClient.Utils
 {
-    class RelayCommand : ICommand
+    class RelayCommandWithParams<T> : ICommand
     {
-        readonly Action _act;
-        public RelayCommand(Action act)
+        public event EventHandler CanExecuteChanged;
+
+        private readonly Action<T> _act;
+        public RelayCommandWithParams(Action<T> act)
         {
             _act = act;
         }
-
-        public event EventHandler CanExecuteChanged;
-
         public bool CanExecute(object parameter)
         {
             return true;
@@ -24,7 +23,7 @@ namespace BackgammonClient.Utils
 
         public void Execute(object parameter)
         {
-            _act();//1
+            _act((T)parameter);
         }
     }
 }

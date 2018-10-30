@@ -48,12 +48,15 @@ namespace BackgammonClient.ViewModels
         private ClientUserManager _userManager;
         private ClientChatManager _chatManager;
 
+        public string UserTitle { get; set; }
+
         //ctor
         public ChatViewModel()
         {
             _userManager = new ClientUserManager();
             _chatManager = new ClientChatManager();
-            UserToChatWith = ClientUserManager.UserToChatWith;
+            UserToChatWith = $"You are talking with: { ClientUserManager.UserToChatWith}";
+            UserTitle = $"Welcome {ClientUserManager.CurrentUser}";
             SendMessageCommand = new RelayCommand(SandMessage);
             BackCommand = new RelayCommand(Back);
             _chatManager.RegisterSendMessageEvent(ReciveMessage);
@@ -63,6 +66,7 @@ namespace BackgammonClient.ViewModels
         // Send message to user.
         private void SandMessage()
         {
+
             if (string.IsNullOrWhiteSpace(Message)) return;
             MessageBlock += ChatMessageFormatter.Format(Message, ClientUserManager.CurrentUser);
             _chatManager.InvokeSendMessage(Message);
@@ -81,7 +85,7 @@ namespace BackgammonClient.ViewModels
             _userManager.ChangeUserStatus(UserState.online);
 
             _chatManager.UserDisconnected();
-            Application.Current.MainWindow.Content =new ContactPage();
+            Application.Current.MainWindow.Content = new ContactPage();
             //ReturnToContactPage();
         }
 
@@ -91,7 +95,7 @@ namespace BackgammonClient.ViewModels
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                MessageBox.Show("User leave the chat");
+                MessageBox.Show(Application.Current.MainWindow, "User leave the chat");
                 Application.Current.MainWindow.Content = new ContactPage();
             }));
         }

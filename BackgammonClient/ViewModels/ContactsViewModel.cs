@@ -42,6 +42,8 @@ namespace BackgammonClient.ViewModels
             }
         }
 
+
+        public string UserTitle { get; set; }
         //ctor
         public ContactsViewModel()
         {
@@ -55,6 +57,7 @@ namespace BackgammonClient.ViewModels
             LogoutCommand = new RelayCommand(Logout);
             OpenChatCommand = new RelayCommand(OpenChat);
             OpenGameCommand = new RelayCommand(OpenGame);
+            UserTitle = $"Welcome {ClientUserManager.CurrentUser}";
         }
 
 

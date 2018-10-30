@@ -22,5 +22,13 @@ namespace General.Interfaces
         int BarredBlackCheckers { get; set; }
 
         int BarredWhiteCheckers { get; set; }
+
+        string BlackPlayer { get; set; }
+
+        string WhitePlayer { get; set; }
+
+         int MoveFrom { get; set; }
+
+         int MoveTo { get; set; }
     }
 }

@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:BackgammonClient.Views"
       xmlns:userModel ="clr-namespace:BackgammonClient.Models"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="480" d:DesignWidth="800"
       Title="ContactPage">
 
 
@@ -28,8 +28,8 @@
                             </Style.Triggers>
                         </Style>
                     </Ellipse.Style>
-                    
-                    
+
+
                 </Ellipse>
             </DockPanel>
         </DataTemplate>
@@ -37,12 +37,17 @@
 
     <Grid Background="White">
         <Border  HorizontalAlignment="Center" VerticalAlignment="Center"  BorderBrush="Black" BorderThickness="1">
-        <Grid Height="450" Width="800" Background="LightGray" >
-        <ListBox x:Name="listBox" SelectedItem="{Binding ChosenContact}" ItemsSource="{Binding ContactList}"  HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="350" Margin="224,0,0,0"/>
-        <Button x:Name="playButton" Content="Play" Command="{Binding OpenGameCommand}" HorizontalAlignment="Left" Margin="361,415,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="chatButton" Content="Chat"  Command="{Binding OpenChatCommand}" HorizontalAlignment="Left" Margin="224,415,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="logoutButton" Content="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="499,415,0,0" VerticalAlignment="Top" Width="75"/>
-        </Grid>
+            <Grid Height="480" Width="800" Background="LightGray" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" FontWeight="Bold" FontSize="22" TextAlignment="Center" Text="{Binding UserTitle}"></TextBlock>
+                <ListBox x:Name="listBox" Grid.Row="1" SelectedItem="{Binding ChosenContact}" ItemsSource="{Binding ContactList}"  HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="350" Margin="224,0,0,0"/>
+                <Button x:Name="playButton" Grid.Row="1" Content="Play" Command="{Binding OpenGameCommand}" HorizontalAlignment="Left" Margin="361,415,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="chatButton" Grid.Row="1" Content="Chat"  Command="{Binding OpenChatCommand}" HorizontalAlignment="Left" Margin="224,415,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="logoutButton" Grid.Row="1" Content="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Left" Margin="499,415,0,0" VerticalAlignment="Top" Width="75"/>
+            </Grid>
         </Border>
     </Grid>
 </Page>

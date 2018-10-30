@@ -5,24 +5,27 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BackgammonClient.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="805"
+      d:DesignHeight="480" d:DesignWidth="800"
       Title="Chat page">
 
     <Grid Background="White">
         <Border  HorizontalAlignment="Center" VerticalAlignment="Center"  BorderBrush="Black" BorderThickness="1">
-            <Grid Background="LightGray" Height="450" Width="800" >
-        <TextBlock x:Name="titleTextBlock" TextAlignment="Center" HorizontalAlignment="Left" Margin="313,24,0,0" TextWrapping="Wrap" Text="{Binding UserToChatWith}" VerticalAlignment="Top" Width="183" RenderTransformOrigin="0.536,0.556" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="289" Margin="40,24,0,0" VerticalAlignment="Top" Width="719">
-            <TextBox  Name="consoleTextBlock" Text="{Binding MessageBlock}" SelectionBrush="Transparent" Cursor="Arrow" IsReadOnly="True"  VerticalScrollBarVisibility="Auto"/>
-        </Border>
-        <TextBox x:Name="massageTextBox" Text="{Binding Message}"  HorizontalAlignment="Left" Height="59" Margin="40,332,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="639"/>
-        <Button x:Name="button" Content="Send" Command="{Binding SendMessageCommand}" HorizontalAlignment="Left" Margin="701,349,0,0" VerticalAlignment="Top" Width="58" Height="27" Cursor="ScrollW" RenderTransformOrigin="0.706,0.493"/>
-        <Button x:Name="button1" Command="{Binding BackCommand}"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="23" Margin="758,0,0,0" >
-            <Button.Background>
-                <ImageBrush ImageSource="/BackgammonClient;component/Assets/X.png"/>
-            </Button.Background>
-        </Button>
-        </Grid>
+            
+            <Grid Background="LightGray" Height="480" Width="800" >
+                <TextBlock  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="258,10,0,0" Width="300"  FontWeight="Bold" FontSize="22" TextAlignment="Center" Text="{Binding UserTitle}"></TextBlock>
+
+                <TextBlock x:Name="titleTextBlock"  TextAlignment="Center" HorizontalAlignment="Left" Margin="258,44,0,0" TextWrapping="Wrap" Text="{Binding UserToChatWith}" VerticalAlignment="Top" Width="300"  FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="289" Margin="40,74,0,0" VerticalAlignment="Top" Width="719">
+                    <TextBox  Name="consoleTextBlock" Text="{Binding MessageBlock}" SelectionBrush="Transparent" Cursor="Arrow" IsReadOnly="True"  VerticalScrollBarVisibility="Auto"/>
+                </Border>
+                <TextBox x:Name="massageTextBox" Text="{Binding Message}"  HorizontalAlignment="Left" Height="59" Margin="40,382,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="639"/>
+                <Button x:Name="button" Content="Send" Command="{Binding SendMessageCommand}" HorizontalAlignment="Left" Margin="701,399,0,0" VerticalAlignment="Top" Width="58" Height="27" Cursor="ScrollW" RenderTransformOrigin="0.706,0.493"/>
+                <Button x:Name="button1" Command="{Binding BackCommand}"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="23" Margin="758,0,0,0" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="/BackgammonClient;component/Assets/X.png"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
         </Border>
     </Grid>
 </Page>

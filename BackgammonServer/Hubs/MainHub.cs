@@ -85,7 +85,7 @@ namespace BackgammonServer.Hubs
             }
             string conectionId = _userManager.GetConectionId(senderName);
             Clients.Client(conectionId).getInvitationResult(response);
-            
+
         }
 
         #endregion
@@ -129,30 +129,48 @@ namespace BackgammonServer.Hubs
         }
 
         #region Game
-        public Dice RollDice(string userToChatWith)
-        {
-            Dice result = _gameManager.RollDice();
-            string conectionId = _userManager.GetConectionId(userToChatWith);
-            Clients.Client(conectionId).getDiceResult(result);
-            return result;
-        }
-
 
         public void InitializeBoardGame(string senderName, string reciverName)
         {
             _gameManager.InitializeBoard(senderName, reciverName);
-            
         }
 
-        public string  GetGameKey(string senderName,string ReciverName)
+        public string GetGameKey(string senderName, string ReciverName)
         {
             return _gameManager.GetGameKey(senderName, ReciverName);
         }
 
         public IGameBoardState GetGameBoard(string gameKey)
         {
-            var r =  _gameManager.GetGameBoard(gameKey);
-            return r;
+            return _gameManager.GetGameBoard(gameKey);
+
+        }
+
+        public Dice RollDice(string gameKey)
+        {
+            Dice result = _gameManager.RollDice(gameKey);
+            if (_gameManager._boards[gameKey].CurrentPlayer == _gameManager._boards[gameKey].BlackPlayer)
+            {
+                Clients.Client(_gameManager._boards[gameKey].WhiteConectionId).getDiceResult(result);
+            }
+            else
+            {
+                Clients.Client(_gameManager._boards[gameKey].BlackConectionId).getDiceResult(result);
+            }
+            return result;
+        }
+
+        public bool MoveChecker(int from, int to, string gameKey)
+        {
+            if (_gameManager.MoveChecker(from, to, gameKey))
+            {
+                Clients.Clients(_gameManager.GetConectionStrings(gameKey)).getUpdatedBoard((IGameBoardState)_gameManager._boards[gameKey]);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         #endregion
     }

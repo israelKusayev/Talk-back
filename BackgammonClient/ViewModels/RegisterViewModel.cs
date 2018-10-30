@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace BackgammonClient.ViewModels
 {
-    class RegisterViewModel
+    class RegisterViewModel 
     {
         public User User { get; set; }
         private ClientUserManager _userManager;

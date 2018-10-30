@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:BackgammonClient.Views"
       
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="400"
+      d:DesignHeight="480" d:DesignWidth="400"
       Title="RegisterPage">
 
     <Grid Background="White">

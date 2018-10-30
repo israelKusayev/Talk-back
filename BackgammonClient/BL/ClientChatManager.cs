@@ -35,7 +35,11 @@ namespace BackgammonClient.BL
             _server.Proxy.On("InteractionRequest", (string senderName, bool isChat) =>
             {
                 string gameOrChat = isChat ? "chat" : "game";
-                MessageBoxResult result = MessageBox.Show($"{senderName} invite you to {gameOrChat}", $"{gameOrChat} request", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = default(MessageBoxResult);
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    result = MessageBox.Show(Application.Current.MainWindow, $"{senderName} invite you to {gameOrChat}", $"{gameOrChat} request", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                }));
                 bool boolResult = result == MessageBoxResult.Yes ? true : false;
                 if (boolResult)
                 {
@@ -56,11 +60,9 @@ namespace BackgammonClient.BL
                 }
                 Task task = Task.Run(async () =>
                 {
-                    await _server.Proxy.Invoke("HandleInvitationResult", result, senderName, ClientUserManager.CurrentUser);
+                    await _server.Proxy.Invoke("HandleInvitationResult", boolResult, senderName, ClientUserManager.CurrentUser);
                 });
-                task.ConfigureAwait(false);
-
-
+                //task.ConfigureAwait(false);
 
 
                 //task.Wait();//worker thread.
@@ -83,7 +85,6 @@ namespace BackgammonClient.BL
                 Task task = Task.Run(() =>
                 {
                     _userDisconnectedEvent?.Invoke();
-
                 });
             });
             #endregion
@@ -98,8 +99,6 @@ namespace BackgammonClient.BL
             {
                 await _server.Proxy.Invoke("SendRequest", ClientUserManager.UserToChatWith, ClientUserManager.CurrentUser, isChat);
             });
-            task.ConfigureAwait(false);
-            task.Wait();
         }
 
         //Send message to second user.
@@ -109,8 +108,6 @@ namespace BackgammonClient.BL
             {
                 await _server.Proxy.Invoke("SendMessage", message, ClientUserManager.UserToChatWith, ClientUserManager.CurrentUser);
             });
-            //task.ConfigureAwait(false);
-            //task.Wait();
         }
 
         internal void UserDisconnected()

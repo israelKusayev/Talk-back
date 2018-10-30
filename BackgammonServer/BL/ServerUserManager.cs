@@ -49,13 +49,13 @@ namespace BackgammonServer.BL
 
         internal void AddConectionId(string connectionId, string userName)
         {
-            try
+            if (!_userConections.ContainsKey(userName))
             {
                 _userConections.Add(userName, connectionId);
             }
-            catch (Exception e)
+            else
             {
-                throw new Exception(e.Message);//todo //if the user try to login and he already logged in.
+                //todo?
             }
         }
 
@@ -97,8 +97,6 @@ namespace BackgammonServer.BL
         }
 
 
-
-
         internal bool Login(User user)
         {
             if (user == null || string.IsNullOrWhiteSpace(user.UserName)
@@ -106,8 +104,12 @@ namespace BackgammonServer.BL
 
             using (var context = new Db())
             {
-                var thisUser = context.UserTable.FirstOrDefault(e => e.UserName == user.UserName);
-                if (thisUser == null) return false;
+                User thisUser = context.UserTable.FirstOrDefault(e => e.UserName == user.UserName);
+                if (thisUser == null || thisUser.Password != user.Password)
+                {
+                    return false;
+                }
+
             }
             UpdateContactList(user.UserName, UserState.online);
             return true;
@@ -118,13 +120,11 @@ namespace BackgammonServer.BL
             UpdateContactList(userName, UserState.offline);
         }
 
-
         internal void AddNewPaier(string senderName, string reciverName)
         {
             _interactingUsersPairs.Add(senderName, reciverName);
         }
 
-     
 
         internal void RemovePaier(string userToChatWith)
         {

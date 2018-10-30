@@ -44,8 +44,6 @@ namespace BackgammonClient.BL
            {
                return await _server.Proxy.Invoke<Dictionary<string, UserState>>("GetContactList");
            });
-            //Contacts.ConfigureAwait(false);
-            //Contacts.Wait();
 
             Contacts.Result.Remove(CurrentUser);
             return Contacts.Result;
@@ -58,7 +56,6 @@ namespace BackgammonClient.BL
                 await _server.Proxy.Invoke("ChangeUserStatus", CurrentUser, state);
             });
             task.ConfigureAwait(false);
-            //task.Wait();
         }
 
         internal bool InvokeRegister(User user)
@@ -66,13 +63,11 @@ namespace BackgammonClient.BL
             try
             {
                 CurrentUser = user.UserName;
-                Task<bool> task = Task<bool>.Run(async () =>
+                Task<bool> task = Task.Run(async () =>
                 {
                     return await _server.Proxy.Invoke<bool>("Register", user);
 
                 });
-                task.ConfigureAwait(false);
-                task.Wait();
                 if (!task.Result)
                 {
                     MessageBox.Show("this username already exists.");
@@ -97,8 +92,6 @@ namespace BackgammonClient.BL
                 {
                     return await _server.Proxy.Invoke<bool>("Login", user);
                 });
-                task.ConfigureAwait(false);
-                task.Wait();
                 if (!task.Result)
                 {
                     MessageBox.Show("username or password is incorrect.");
@@ -121,8 +114,6 @@ namespace BackgammonClient.BL
                 {
                     await _server.Proxy.Invoke("Logout", CurrentUser);
                 });
-                task.ConfigureAwait(false);
-                task.Wait();
                 return true;
             }
             catch (Exception)
