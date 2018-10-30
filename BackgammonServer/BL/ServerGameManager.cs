@@ -11,8 +11,10 @@ namespace BackgammonServer.BL
     public class ServerGameManager
     {
         internal Dictionary<string, GameBoardState> _boards;
-        private static ServerGameManager _instance;
+        //internal string currentTurn;//?
 
+        // Page instance
+        private static ServerGameManager _instance;
         public static ServerGameManager Instance
         {
             get
@@ -27,11 +29,28 @@ namespace BackgammonServer.BL
             set { _instance = value; }
         }
 
-        internal string currentTurn;
-
+        //ctor
         private ServerGameManager()
         {
             _boards = new Dictionary<string, GameBoardState>();
+        }
+
+        internal void InitializeBoard(string senderName, string reciverName)
+        {
+            string guid = senderName;
+            GameBoardState gameBoard = new GameBoardState(senderName, reciverName);
+            _boards.Add(guid, gameBoard);
+
+        }
+
+        internal string GetGameKey(string senderName, string reciverName)
+        {
+            return _boards.ContainsKey(senderName) ? senderName : reciverName;
+        }
+
+        internal IGameBoardState GetGameBoard(string gameKey)
+        {
+            return _boards[gameKey];
         }
 
         internal Dice RollDice(string gameKey)
@@ -50,52 +69,43 @@ namespace BackgammonServer.BL
             return dice;
         }
 
-        internal void InitializeBoard(string senderName, string reciverName)
-        {
-            string guid = senderName;
-            GameBoardState gameBoard = new GameBoardState(senderName, reciverName);
-            _boards.Add(guid, gameBoard);
-
-        }
-
-        internal IGameBoardState GetGameBoard(string gameKey)
-        {
-            return _boards[gameKey];
-        }
-
-        internal string GetGameKey(string senderName, string reciverName)
-        {
-            return _boards.ContainsKey(senderName) ? senderName : reciverName;
-        }
-
-
-
-
-
+        //black is asc// white is desc;
 
         internal bool MoveChecker(int from, int to, string gameKey)
         {
             GameBoardState temp = _boards[gameKey];
 
-            if (temp.CurrentPlayer == temp.BlackPlayer)
+            if (temp.CurrentPlayer == temp.BlackPlayer)// if is the black player.
             {
-                if (temp.WhiteCheckersLocation.ContainsKey(to))
+
+                if (to <= from || temp.WhiteCheckersLocation.ContainsKey(to)
+                    || !CorrectStep(temp, Math.Abs(from - to)))// if he want to move checker on rival checker.
+                {
                     return false;
+                }
                 else
                 {
                     MoveCheckerInDictionary(to, temp.BlackCheckersLocation);
 
                     RemoveCheckerFromDictionary(from, temp.BlackCheckersLocation);
+
+                    ReplaceTurn(temp, temp.WhitePlayer);
+
                 }
             }
-            else
+            else // if is the white player.
             {
-                if (temp.BlackCheckersLocation.ContainsKey(to))
+                if (from <= to || temp.BlackCheckersLocation.ContainsKey(to)
+                    || !CorrectStep(temp, Math.Abs(from - to)))
+                {
                     return false;
+                }
 
-                MoveCheckerInDictionary(to, temp.BlackCheckersLocation);
+                MoveCheckerInDictionary(to, temp.WhiteCheckersLocation);
 
                 RemoveCheckerFromDictionary(from, temp.WhiteCheckersLocation);
+
+                ReplaceTurn(temp, temp.BlackPlayer);
             }
             temp.MoveFrom = from;
             temp.MoveTo = to;
@@ -103,7 +113,57 @@ namespace BackgammonServer.BL
             return true;
         }
 
-        private static void MoveCheckerInDictionary(int to, Dictionary<int, int> checkersDictionary)
+        private bool CorrectStep(GameBoardState temp, int steps)
+        {
+            if (temp.IsDouble)
+            {
+                if (temp.Dice.Die1 == steps)
+                {
+                    return true;
+                }
+            }
+            if (temp.Dice.Die1 == steps)
+            {
+                temp.Dice.Die1 = -1;
+                return true;
+            }
+            if (temp.Dice.Die2 == steps)
+            {
+                temp.Dice.Die2 = -1;
+                return true;
+            }
+            return false;
+        }
+
+        private void ReplaceTurn(GameBoardState temp, string newTurn)
+        {
+            if (temp.IsDouble)
+            {
+                if (temp._countMovments == 3)
+                {
+                    temp.CurrentPlayer = newTurn;
+                    temp._countMovments = 0;
+                    temp.TurnChangaed = true;
+                }
+                else
+                {
+                    temp._countMovments++;
+                    temp.TurnChangaed = false;
+                }
+                return;
+            }
+            if (temp.Dice.Die1 == -1 && temp.Dice.Die2 == -1)
+            {
+                temp.CurrentPlayer = newTurn;
+                temp.TurnChangaed = true;
+            }
+            else
+            {
+                temp.TurnChangaed = false;
+            }
+        }
+
+        private void MoveCheckerInDictionary(int to, Dictionary<int, int> checkersDictionary)
         {
             if (checkersDictionary.ContainsKey(to))
             {
@@ -131,7 +191,7 @@ namespace BackgammonServer.BL
         {
             List<string> conections = new List<string>()
             {
-                _boards[gameKey].WhiteConectionId,_boards[gameKey].BlackConectionId
+                _boards[gameKey]._whiteConectionId,_boards[gameKey]._blackConectionId
             };
             return conections;
         }

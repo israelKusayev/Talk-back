@@ -41,6 +41,8 @@ namespace BackgammonClient.ViewModels
             }
         }
 
+        public int Rotate { get; set; }
+
         private string _imgCube1;
         public string ImgCube1
         {
@@ -94,6 +96,11 @@ namespace BackgammonClient.ViewModels
             _gameManager.GetBoardState();
             InitializeBoardCheckers();
             CreateTitle();
+
+            if (ClientUserManager.CurrentUser == _gameManager._gameBoard.WhitePlayer)
+            {
+                Rotate = 180;
+            }
 
 
             RollDiceCommand = new RelayCommand(RollDice);
@@ -201,9 +208,33 @@ namespace BackgammonClient.ViewModels
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
+                if (_gameManager._gameBoard.TurnChangaed)
+                {
+                    if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer)
+                    {
+
+                        DiceVisibilityGroup1 = "Hidden";
+                        DiceVisibilityGroup2 = "Visible";
+                    }
+                    else
+                    {
+                        DiceVisibilityGroup1 = "Visible";
+                        DiceVisibilityGroup2 = "Hidden";
+                    }
+                    _rollOnes = false;
+                }
+
+
                 _cells[_gameManager._gameBoard.MoveFrom].RemoveAt(0);
                 bool color = _gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer ? true : false;
-                _cells[_gameManager._gameBoard.MoveTo].Add(CreateChecker(color));
+                if (_gameManager._gameBoard.TurnChangaed)
+                {
+                    _cells[_gameManager._gameBoard.MoveTo].Add(CreateChecker(!color));
+                }
+                else
+                {
+                    _cells[_gameManager._gameBoard.MoveTo].Add(CreateChecker(color));
+                }
             }));
         }
 

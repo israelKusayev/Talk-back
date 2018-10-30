@@ -15,20 +15,21 @@ namespace BackgammonClient.BL
 
     class ClientGameManager
     {
-        private string _gameKey;
-
-        internal GameBoardState _gameBoard;
         private InitilaizeProxy _server = InitilaizeProxy.Instance;
+        private readonly string _gameKey;
+        internal GameBoardState _gameBoard;
 
 
         private event GetDiceEventHandler _getDiceEvent;
         private event BoardUpdatedEventHandler _boardUpdatedEvent;
+
+        //ctor
         public ClientGameManager()
         {
             _server.Proxy.On("getDiceResult", (Dice dice) =>
-             {
-                 _getDiceEvent?.Invoke(dice);
-             });
+            {
+                _getDiceEvent?.Invoke(dice);
+            });
 
             _server.Proxy.On("getUpdatedBoard", (GameBoardState updatedGameBoard) =>
             {
@@ -37,12 +38,17 @@ namespace BackgammonClient.BL
 
             });
             _server.HubConnection.Start().Wait();
+
+            _gameKey = GetGameKey();
+        }
+
+        private string GetGameKey()
+        {
             Task<string> task = Task.Run(async () =>
             {
                 return await _server.Proxy.Invoke<string>("GetGameKey", ClientUserManager.CurrentUser, ClientUserManager.UserToChatWith);
             });
-            _gameKey = task.Result;
-
+            return task.Result;
         }
 
         internal Dice RollDice()
@@ -54,15 +60,6 @@ namespace BackgammonClient.BL
             return task.Result;
         }
 
-        public void RegisterGetDiceEvent(GetDiceEventHandler getDiceEvent)
-        {
-            _getDiceEvent += getDiceEvent;
-        }
-        public void RegisterBoardUpdatedEvent(BoardUpdatedEventHandler boardUpdatedEvent)
-        {
-            _boardUpdatedEvent += boardUpdatedEvent;
-        }
-
         internal GameBoardState GetBoardState()
         {
             Task<GameBoardState> task = Task.Run(async () =>
@@ -71,16 +68,6 @@ namespace BackgammonClient.BL
             });
             _gameBoard = task.Result;
             return _gameBoard;
-        }
-
-        internal bool MoveChecker(int selectedChecker, int selectedLocation)
-        {
-            Task<bool> task = Task.Run(async () =>
-            {
-                return await _server.Proxy.Invoke<bool>("MoveChecker", selectedChecker, selectedLocation, _gameKey);
-            });
-
-            return task.Result;
         }
 
         internal bool ValidateCheckerColor(int selectedChecker)
@@ -100,6 +87,24 @@ namespace BackgammonClient.BL
                 }
             }
             return false;
+        }
+
+        internal bool MoveChecker(int selectedChecker, int selectedLocation)
+        {
+            Task<bool> task = Task.Run(async () =>
+            {
+                return await _server.Proxy.Invoke<bool>("MoveChecker", selectedChecker, selectedLocation, _gameKey);
+            });
+            return task.Result;
+        }
+
+        internal void RegisterGetDiceEvent(GetDiceEventHandler getDiceEvent)
+        {
+            _getDiceEvent += getDiceEvent;
+        }
+        internal void RegisterBoardUpdatedEvent(BoardUpdatedEventHandler boardUpdatedEvent)
+        {
+            _boardUpdatedEvent += boardUpdatedEvent;
         }
     }
 }

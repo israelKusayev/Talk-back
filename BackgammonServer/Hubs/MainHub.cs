@@ -76,11 +76,10 @@ namespace BackgammonServer.Hubs
         // Get the response from the second user.
         public void HandleInvitationResult(bool response, string senderName, string reciverName)
         {
-
             if (response)
             {
                 ChangeUserStatus(reciverName, UserState.busy);
-                _gameManager.currentTurn = senderName;
+                //_gameManager.currentTurn = senderName;//?
                 _userManager.AddNewPaier(senderName, reciverName);
             }
             string conectionId = _userManager.GetConectionId(senderName);
@@ -143,7 +142,6 @@ namespace BackgammonServer.Hubs
         public IGameBoardState GetGameBoard(string gameKey)
         {
             return _gameManager.GetGameBoard(gameKey);
-
         }
 
         public Dice RollDice(string gameKey)
@@ -151,11 +149,11 @@ namespace BackgammonServer.Hubs
             Dice result = _gameManager.RollDice(gameKey);
             if (_gameManager._boards[gameKey].CurrentPlayer == _gameManager._boards[gameKey].BlackPlayer)
             {
-                Clients.Client(_gameManager._boards[gameKey].WhiteConectionId).getDiceResult(result);
+                Clients.Client(_gameManager._boards[gameKey]._whiteConectionId).getDiceResult(result);
             }
             else
             {
-                Clients.Client(_gameManager._boards[gameKey].BlackConectionId).getDiceResult(result);
+                Clients.Client(_gameManager._boards[gameKey]._blackConectionId).getDiceResult(result);
             }
             return result;
         }

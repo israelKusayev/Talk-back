@@ -18,8 +18,8 @@
                 <Label x:Name="PasswordLabel" Content="Password" HorizontalAlignment="Left" Margin="74,206,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="userNameTextBox"  HorizontalAlignment="Left" Height="23" Margin="74,151,0,0" TextWrapping="Wrap" Text="{Binding User.UserName}" VerticalAlignment="Top" Width="120"/>
                 <TextBox x:Name="passwordTextBox" HorizontalAlignment="Left" Height="23" Margin="74,237,0,0" TextWrapping="Wrap" Text="{Binding User.Password}" VerticalAlignment="Top" Width="120"/>
-                <Button x:Name="registerButton" Command="{Binding RegisterCommand}" Content="Register" HorizontalAlignment="Left" Margin="74,316,0,0" VerticalAlignment="Top" Width="120" Height="29"/>
-                <Button x:Name="loginButton" Command="{Binding LoginCommand}" Content="Login" HorizontalAlignment="Left" Margin="200,316,0,0" VerticalAlignment="Top" Width="120" Height="24"/>
+                <Button x:Name="registerButton" Command="{Binding RegisterCommand}" Content="Register" HorizontalAlignment="Left" Margin="74,316,0,0" VerticalAlignment="Top" Width="120" Height="25"/>
+                <Button x:Name="loginButton" Command="{Binding LoginCommand}" Content="Login" HorizontalAlignment="Left" Margin="200,316,0,0" VerticalAlignment="Top" Width="120" Height="25"/>
             </Grid>
         </Border>
     </Grid>

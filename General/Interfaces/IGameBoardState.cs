@@ -27,8 +27,10 @@ namespace General.Interfaces
 
         string WhitePlayer { get; set; }
 
-         int MoveFrom { get; set; }
+        int MoveFrom { get; set; }
 
-         int MoveTo { get; set; }
+        int MoveTo { get; set; }
+
+        bool TurnChangaed { get; set; }
     }
 }

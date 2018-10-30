@@ -13,7 +13,15 @@
             <ImageBrush ImageSource="/BackgammonClient;component/Assets/X.png"/>
         </Grid.Background>
         <Border HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" Grid.RowSpan="2">
-            <Grid Width="800" Height="450" >
+            <Grid Width="800" Height="450" RenderTransformOrigin="0.5,0.5" >
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="{Binding Rotate}"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
                 <Grid.Background>
                     <ImageBrush ImageSource="/BackgammonClient;component/backgammon background.gif"/>
                 </Grid.Background>
@@ -145,24 +153,24 @@
                 <Button Grid.Column="13" Grid.Row="3"  Command="{Binding ChooseCheckerCommand}" CommandParameter="12"  Opacity="0"  ></Button>
 
                 <StackPanel Grid.Column="7" Grid.Row="1" VerticalAlignment="Center">
-                    <Button Width="30" Height="30"   Visibility="{Binding DiceVisibilityGroup2}" Command="{Binding RollDiceCommand}">
+                    <Button Width="30" Height="30"   Visibility="{Binding DiceVisibilityGroup1}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube1}"/>
                         </Button.Background>
                     </Button>
-                    <Button Width="30" Height="30"  Visibility="{Binding DiceVisibilityGroup2}" Command="{Binding RollDiceCommand}">
+                    <Button Width="30" Height="30"  Visibility="{Binding DiceVisibilityGroup1}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube2}"/>
                         </Button.Background>
                     </Button>
                 </StackPanel>
                 <StackPanel Grid.Column="7" Grid.Row="3" VerticalAlignment="Center">
-                    <Button Width="30" Height="30" Visibility="{Binding DiceVisibilityGroup1}" Command="{Binding RollDiceCommand}">
+                    <Button Width="30" Height="30" Visibility="{Binding DiceVisibilityGroup2}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube1}"/>
                         </Button.Background>
                     </Button>
-                    <Button Width="30" Height="30 "  Visibility="{Binding DiceVisibilityGroup1}" Command="{Binding RollDiceCommand}">
+                    <Button Width="30" Height="30 "  Visibility="{Binding DiceVisibilityGroup2}" Command="{Binding RollDiceCommand}">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding ImgCube2}"/>
                         </Button.Background>

@@ -23,18 +23,19 @@ namespace BackgammonServer.Models
         public string WhitePlayer { get; set; }
         public int MoveFrom { get; set; }
         public int MoveTo { get; set; }
+        public bool TurnChangaed { get; set; }
 
-        internal readonly string BlackConectionId;
-        internal readonly string WhiteConectionId;
-
+        internal readonly string _blackConectionId;
+        internal readonly string _whiteConectionId;
+        internal int _countMovments;
         private ServerUserManager _userManager = ServerUserManager.Instance;
         public GameBoardState(string whitePlayer, string blackPlayer)
         {
             CurrentPlayer = WhitePlayer = whitePlayer;
             BlackPlayer = blackPlayer;
 
-            BlackConectionId = _userManager.GetConectionId(blackPlayer);
-            WhiteConectionId = _userManager.GetConectionId(whitePlayer);
+            _blackConectionId = _userManager.GetConectionId(blackPlayer);
+            _whiteConectionId = _userManager.GetConectionId(whitePlayer);
 
             InitializeBoardGame();
         }

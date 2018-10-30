@@ -21,5 +21,6 @@ namespace BackgammonClient.Models
         public string WhitePlayer { get; set; }
         public int MoveFrom { get; set; }
         public int MoveTo { get; set; }
+        public bool TurnChangaed { get; set; }
     }
 }
