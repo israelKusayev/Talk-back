@@ -67,10 +67,11 @@ namespace BackgammonClient.ViewModels
         {
             ContactList = ConvertUserForUserView.ConvertUser(dictionary);
         }
-
+        int a = 1;
         //Sand request to another user to chat with him.
         private void Open(bool isChat)
         {
+            a++;
             if (ChosenContact != null)
             {
                 if (ChosenContact.State == UserState.offline)

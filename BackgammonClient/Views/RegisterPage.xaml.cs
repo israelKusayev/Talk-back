@@ -21,10 +21,12 @@ namespace BackgammonClient.Views
     /// </summary>
     public partial class RegisterPage : Page
     {
+
         public RegisterPage()
         {
             InitializeComponent();
             DataContext = new RegisterViewModel();
+
         }
     }
 }

@@ -24,6 +24,7 @@ namespace BackgammonClient.BL
         private event UserDisconnectedEventHandler _userDisconnectedEvent;
         #endregion 
 
+        int lala = 1;
         private InitilaizeProxy _server = InitilaizeProxy.Instance;
 
         public ClientChatManager()
@@ -34,9 +35,10 @@ namespace BackgammonClient.BL
             //for reciver
             _server.Proxy.On("InteractionRequest", (string senderName, bool isChat) =>
             {
+                lala++;
                 string gameOrChat = isChat ? "chat" : "game";
                 MessageBoxResult result = default(MessageBoxResult);
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     result = MessageBox.Show(Application.Current.MainWindow, $"{senderName} invite you to {gameOrChat}", $"{gameOrChat} request", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 }));

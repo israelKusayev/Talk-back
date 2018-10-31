@@ -21,6 +21,20 @@ namespace BackgammonClient.Views
     /// </summary>
     public partial class ContactPage : Page
     {
+
+        //private static ContactPage _page;
+
+        //public static ContactPage Pagee
+        //{
+        //    get
+        //    {
+        //        if (_page == null)
+        //        {
+        //            _page = new ContactPage();
+        //        }
+        //        return _page;
+        //    }
+        //}
         public ContactPage()
         {
             InitializeComponent();

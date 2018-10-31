@@ -21,6 +21,21 @@ namespace BackgammonClient.Views
     /// </summary>
     public partial class ChatPage : Page
     {
+        //private static ChatPage _page;
+
+        //public static ChatPage Pagee
+        //{
+        //    get
+        //    {
+        //        if (_page == null)
+        //        {
+        //            _page = new ChatPage();
+        //        }
+        //        return _page;
+        //    }
+        //}
+
+
         public ChatPage()
         {
             InitializeComponent();

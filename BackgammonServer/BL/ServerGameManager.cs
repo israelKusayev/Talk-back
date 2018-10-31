@@ -121,6 +121,10 @@ namespace BackgammonServer.BL
                 {
                     return true;
                 }
+                else
+                {
+                    return false;
+                }//?
             }
             if (temp.Dice.Die1 == steps)
             {
