@@ -31,15 +31,15 @@ namespace BackgammonServer.Hubs
         }
 
         // Login.
-        public bool Login(User user)
+        public string Login(User user)
         {
-            if (_userManager.Login(user))
+            string error = _userManager.Login(user);
+            if (error == null)
             {
                 _userManager.AddConectionId(Context.ConnectionId, user.UserName);
                 NotifyUserStateChanged();
-                return true;
             }
-            return false;
+            return error;
         }
 
         // Logout.
@@ -169,6 +169,11 @@ namespace BackgammonServer.Hubs
             {
                 return false;
             }
+        }
+
+        public bool PrisonerCanEscape(string gameKey)
+        {
+            return _gameManager.PrisonerCanEscape(gameKey);
         }
         #endregion
     }

@@ -23,7 +23,7 @@ namespace BackgammonClient.ViewModels
         public RegisterViewModel()
         {
             User = new User();
-            _userManager = new ClientUserManager();
+            _userManager = ClientUserManager.Instance;
 
             RegisterCommand = new RelayCommand(Register);
             LoginCommand = new RelayCommand(Login);

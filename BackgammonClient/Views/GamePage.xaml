@@ -46,7 +46,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="12*"/>
-                    <RowDefinition Height="4*"></RowDefinition>
+                    <RowDefinition Height="4.5*"></RowDefinition>
                     <RowDefinition Height="12*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
@@ -180,7 +180,47 @@
                 <StackPanel Grid.Column="7" Grid.Row="2">
 
                 </StackPanel>
-                <TextBlock x:Name="textBlock" TextAlignment="Center" FontWeight="Medium"  HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding UserTitle}" VerticalAlignment="Top" Height="15" Width="620"  Grid.ColumnSpan="11" Grid.Column="2"/>
+                <TextBlock x:Name="title1TextBLock" TextAlignment="Center" FontWeight="Medium"  HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding BlackUserTitle}" VerticalAlignment="Top" Height="15" Width="620"  Grid.ColumnSpan="11" Grid.Column="2"/>
+                <TextBlock x:Name="title2TextBLock" TextAlignment="Center" FontWeight="Medium"  HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding WhiteUserTitle}" VerticalAlignment="Top" Height="15" Width="620"  Grid.ColumnSpan="11" Grid.Column="2" Margin="3,0,0,0" Grid.Row="4" RenderTransformOrigin="0.5,0.5">
+                    <TextBlock.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="180"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+                <StackPanel Grid.Column="7" HorizontalAlignment="Left" Height="30" Margin="13,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="33">
+                    <Grid Visibility="{Binding WhiteBarredVisibility }" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="{Binding Rotate}"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Ellipse Fill="blue" Height="29" Width="29"></Ellipse>
+                        <TextBlock Text="{Binding WhiteBarredCount}" TextAlignment="Center" FontWeight="Medium" FontSize="20" ></TextBlock>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Column="7" HorizontalAlignment="Left" Height="30" Margin="13,35,0,0" Grid.Row="2" VerticalAlignment="Top" Width="33">
+                    <Grid Visibility="{Binding BlackBarredVisibility}" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="{Binding Rotate}"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <Ellipse Fill="Black" Height="29" Width="29"></Ellipse>
+                        <TextBlock Foreground="White" Text="{Binding BlackBarredCount}" TextAlignment="Center" FontWeight="Medium" FontSize="20" ></TextBlock>
+                    </Grid>
+
+
+                </StackPanel>
 
             </Grid>
 

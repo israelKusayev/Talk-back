@@ -53,8 +53,8 @@ namespace BackgammonClient.ViewModels
         //ctor
         public ChatViewModel()
         {
-            _userManager = new ClientUserManager();
-            _chatManager = new ClientChatManager();
+            _userManager = ClientUserManager.Instance;
+            _chatManager = ClientChatManager.Instance;
             UserToChatWith = $"You are talking with: { ClientUserManager.UserToChatWith}";
             UserTitle = $"Welcome {ClientUserManager.CurrentUser}";
             SendMessageCommand = new RelayCommand(SandMessage);
@@ -86,7 +86,6 @@ namespace BackgammonClient.ViewModels
 
             _chatManager.UserDisconnected();
             Application.Current.MainWindow.Content = new ContactPage();
-            //ReturnToContactPage();
         }
 
 

@@ -24,6 +24,7 @@ namespace BackgammonServer.Models
         public int MoveFrom { get; set; }
         public int MoveTo { get; set; }
         public bool TurnChangaed { get; set; }
+        public bool IsBarred { get; set; }
 
         internal readonly string _blackConectionId;
         internal readonly string _whiteConectionId;

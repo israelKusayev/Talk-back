@@ -47,8 +47,8 @@ namespace BackgammonClient.ViewModels
         //ctor
         public ContactsViewModel()
         {
-            _userManager = new ClientUserManager();
-            _chatManager = new ClientChatManager();
+            _userManager = ClientUserManager.Instance;
+            _chatManager = ClientChatManager.Instance;
             ContactList = ConvertUserForUserView.ConvertUser(_userManager.GetContactList());
             _userManager.RegisterNotifyEvent(ContactUptaded);
             _chatManager.RegisterInvitationResponseEvent(HandleUserResponse);
@@ -67,11 +67,9 @@ namespace BackgammonClient.ViewModels
         {
             ContactList = ConvertUserForUserView.ConvertUser(dictionary);
         }
-        int a = 1;
         //Sand request to another user to chat with him.
         private void Open(bool isChat)
         {
-            a++;
             if (ChosenContact != null)
             {
                 if (ChosenContact.State == UserState.offline)

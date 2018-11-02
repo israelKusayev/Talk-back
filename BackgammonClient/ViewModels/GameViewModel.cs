@@ -28,7 +28,28 @@ namespace BackgammonClient.ViewModels
         private int _selectedChecker = -1;
 
         // Binding elements.
-        public string UserTitle { get; set; }
+        private string _blackUserTitle;
+        public string BlackUserTitle
+        {
+            get { return _blackUserTitle; }
+            set
+            {
+                _blackUserTitle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _whiteUserTitle;
+        public string WhiteUserTitle
+        {
+            get { return _whiteUserTitle; }
+            set
+            {
+                _whiteUserTitle = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         private ObservableCollection<Ellipse>[] _cells;
         public ObservableCollection<Ellipse>[] Cells
@@ -87,21 +108,60 @@ namespace BackgammonClient.ViewModels
             }
         }
 
+        private string _whiteBarredVisibility;
+        public string WhiteBarredVisibility
+        {
+            get { return _whiteBarredVisibility; }
+            set
+            {
+                _whiteBarredVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _blackBarredVisibility;
+        public string BlackBarredVisibility
+        {
+            get { return _blackBarredVisibility; }
+            set
+            {
+                _blackBarredVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _whiteBarredCount;
+        public int WhiteBarredCount
+        {
+            get { return _whiteBarredCount; }
+            set
+            {
+                _whiteBarredCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _blackBarredCount;
+        public int BlackBarredCount
+        {
+            get { return _blackBarredCount; }
+            set
+            {
+                _blackBarredCount = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         // ctor
         public GameViewModel()
         {
-            _gameManager = new ClientGameManager();
-            InitializeBoard();
+            _gameManager = ClientGameManager.Instance;
             _gameManager.GetBoardState();
+
+            InitializeBoard();
             InitializeBoardCheckers();
             CreateTitle();
-
-            if (ClientUserManager.CurrentUser == _gameManager._gameBoard.WhitePlayer)
-            {
-                Rotate = 180;
-            }
-
 
             RollDiceCommand = new RelayCommand(RollDice);
             ChooseCheckerCommand = new RelayCommandWithParams<string>(MoveChecker);
@@ -119,6 +179,13 @@ namespace BackgammonClient.ViewModels
 
             DiceVisibilityGroup1 = "Visible";
             DiceVisibilityGroup2 = "Hidden";
+            WhiteBarredVisibility = "Hidden";
+            BlackBarredVisibility = "Hidden";
+
+            if (ClientUserManager.CurrentUser == _gameManager._gameBoard.WhitePlayer)
+            {
+                Rotate = 180;
+            }
         }
 
         private void InitializeBoardCheckers()
@@ -149,7 +216,14 @@ namespace BackgammonClient.ViewModels
         {
             string color = ClientUserManager.CurrentUser == _gameManager._gameBoard.BlackPlayer ? "black" : "blue";
             string turnMessage = ClientUserManager.CurrentUser == _gameManager._gameBoard.CurrentPlayer ? "It is your turn" : "It is your rival turn";
-            UserTitle = $"Welcome {ClientUserManager.CurrentUser}  You play with {ClientUserManager.UserToChatWith}  You are the {color} player  {turnMessage}.";
+            if (color == "black")
+            {
+                BlackUserTitle = $"Welcome {ClientUserManager.CurrentUser}  You play with {ClientUserManager.UserToChatWith}  You are the {color} player  {turnMessage}.";
+            }
+            else
+            {
+                WhiteUserTitle = $"Welcome {ClientUserManager.CurrentUser}  You play with {ClientUserManager.UserToChatWith}  You are the {color} player  {turnMessage}.";
+            }
         }
 
         private void RollDice()
@@ -176,56 +250,120 @@ namespace BackgammonClient.ViewModels
         {
             if (_gameManager._gameBoard.CurrentPlayer == ClientUserManager.CurrentUser)// if is your turn
             {
+                if (_rollOnes == false)
+                {
+                    MessageBox.Show("Please roll dice.");
+                }
+
                 if (_selectedChecker == -1)
                 {
-                    int.TryParse(location, out _selectedChecker);
-                    if (!_gameManager.ValidateCheckerColor(_selectedChecker))
+                    if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer && _gameManager._gameBoard.BarredBlackCheckers != 0)
+                    { }
+                    else if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.WhitePlayer && _gameManager._gameBoard.BarredWhiteCheckers != 0)
                     {
-                        _selectedChecker = -1; // That means he did not click on his color.
+                        _selectedChecker = 24;
                     }
                     else
                     {
-                        Mouse.OverrideCursor = Cursors.Hand;
-                    }
-                }
-                else
-                {
-                    int.TryParse(location, out int selectedLocation);
-                    if (selectedLocation != _selectedChecker)
-                    {
-                        if (!_gameManager.MoveChecker(_selectedChecker, selectedLocation))
+                        int.TryParse(location, out _selectedChecker);
+
+                        if (!_gameManager.ValidateCheckerColor(_selectedChecker))
                         {
-                            MessageBox.Show("cannot move checker to specified location");
-                        } // else the hub will send the updated board to two players.
+                            _selectedChecker = -1; // That means he did not click on his color.
+                        }
+                        else
+                        {
+                            Mouse.OverrideCursor = Cursors.Hand;
+                        }
+                        return;
                     }
-                    Mouse.OverrideCursor = Cursors.Arrow;
-                    _selectedChecker = -1;
+
                 }
+
+                int.TryParse(location, out int selectedLocation);
+                if (selectedLocation != _selectedChecker)
+                {
+                    if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer && _gameManager._gameBoard.BarredBlackCheckers != 0 || _gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.WhitePlayer && _gameManager._gameBoard.BarredWhiteCheckers != 0)
+                    {
+                        if (!_gameManager.PrisonerCanEscape())
+                        {
+                            MessageBox.Show("You can't ascape your turn changed.");
+                        }
+                    }
+                    if (!_gameManager.MoveChecker(_selectedChecker, selectedLocation))
+                    {
+                        MessageBox.Show("cannot move checker to specified location");
+                    } // else the hub will send the updated board to two players.
+                }
+                Mouse.OverrideCursor = Cursors.Arrow;
+                _selectedChecker = -1;
+
             }
         }
 
         private void UpdateGameBoard()
         {
+            CreateTitle();
+            ChangeDiceVisibility();
+            DisplayBarredCheckers();
+            MoveCheckerOnBoard();
+        }
+
+        private void ChangeDiceVisibility()
+        {
+            if (_gameManager._gameBoard.TurnChangaed)
+            {
+                if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer)
+                {
+
+                    DiceVisibilityGroup1 = "Hidden";
+                    DiceVisibilityGroup2 = "Visible";
+                }
+                else
+                {
+                    DiceVisibilityGroup1 = "Visible";
+                    DiceVisibilityGroup2 = "Hidden";
+                }
+                _rollOnes = false;
+            }
+        }
+
+        private void DisplayBarredCheckers()
+        {
+            if (_gameManager._gameBoard.BarredBlackCheckers == 0)
+            {
+                BlackBarredVisibility = "Hidden";
+            }
+            else
+            {
+                BlackBarredVisibility = "Visible";
+                BlackBarredCount = _gameManager._gameBoard.BarredBlackCheckers;
+            }
+
+            if (_gameManager._gameBoard.BarredWhiteCheckers == 0)
+            {
+                WhiteBarredVisibility = "Hidden";
+            }
+            else
+            {
+                WhiteBarredVisibility = "Visible";
+                WhiteBarredCount = _gameManager._gameBoard.BarredWhiteCheckers;
+            }
+        }
+
+        private void MoveCheckerOnBoard()
+        {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (_gameManager._gameBoard.TurnChangaed)
+                if (_gameManager._gameBoard.IsBarred)
                 {
-                    if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer)
-                    {
-
-                        DiceVisibilityGroup1 = "Hidden";
-                        DiceVisibilityGroup2 = "Visible";
-                    }
-                    else
-                    {
-                        DiceVisibilityGroup1 = "Visible";
-                        DiceVisibilityGroup2 = "Hidden";
-                    }
-                    _rollOnes = false;
+                    _cells[_gameManager._gameBoard.MoveTo].RemoveAt(0);
                 }
 
-
-                _cells[_gameManager._gameBoard.MoveFrom].RemoveAt(0);
+                if (_gameManager._gameBoard.MoveFrom != 24 && _gameManager._gameBoard.MoveFrom != -1)
+                {
+                    _cells[_gameManager._gameBoard.MoveFrom].RemoveAt(0);
+                }
                 bool color = _gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer ? true : false;
                 if (_gameManager._gameBoard.TurnChangaed)
                 {

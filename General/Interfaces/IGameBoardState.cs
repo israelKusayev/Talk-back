@@ -32,5 +32,7 @@ namespace General.Interfaces
         int MoveTo { get; set; }
 
         bool TurnChangaed { get; set; }
+
+        bool IsBarred { get; set; }
     }
 }

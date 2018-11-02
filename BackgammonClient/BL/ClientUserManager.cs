@@ -11,14 +11,29 @@ using System.Windows;
 namespace BackgammonClient.BL
 {
     public delegate void NotifyStateEventHandler(Dictionary<string, UserState> dictionary);
-    class ClientUserManager
+    public class ClientUserManager
     {
         private event NotifyStateEventHandler NotifyEvent;
         private InitilaizeProxy _server = InitilaizeProxy.Instance;
         public static string CurrentUser { get; set; }
         public static string UserToChatWith { get; set; }
 
-        public ClientUserManager()
+        private static ClientUserManager _Instance;
+
+        public static ClientUserManager Instance
+        {
+            get
+            {
+                if (_Instance == null)
+                {
+                    _Instance = new ClientUserManager();
+                }
+                return _Instance;
+            }
+        }
+
+
+        private ClientUserManager()
         {
             _server.Proxy.On("notifyUserStateChanged", (Dictionary<string, UserState> updatedContactList) =>
             {
@@ -86,24 +101,16 @@ namespace BackgammonClient.BL
         internal bool InvokeLogin(User user)
         {
             CurrentUser = user.UserName;
-            try
-            {
-                Task<bool> task = Task<bool>.Run(async () =>
+            Task<string> task = Task.Run(async () =>
                 {
-                    return await _server.Proxy.Invoke<bool>("Login", user);
+                    return await _server.Proxy.Invoke<string>("Login", user);
                 });
-                if (!task.Result)
-                {
-                    MessageBox.Show("username or password is incorrect.");
-                    return false;
-                }
-                return true;
-            }
-            catch (Exception)
+            if (task.Result != null)
             {
-                MessageBox.Show("server error please try again.");
+                MessageBox.Show(task.Result);
                 return false;
             }
+            return true;
         }
 
         internal bool InvokeLogout()

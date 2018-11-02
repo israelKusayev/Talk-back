@@ -23,8 +23,23 @@ namespace BackgammonClient.BL
         private event GetDiceEventHandler _getDiceEvent;
         private event BoardUpdatedEventHandler _boardUpdatedEvent;
 
+
+        private static ClientGameManager _Instance;
+
+        public static ClientGameManager Instance
+        {
+            get
+            {
+                if (_Instance == null)
+                {
+                    _Instance = new ClientGameManager();
+                }
+                return _Instance;
+            }
+            set { _Instance = value; }
+        }
         //ctor
-        public ClientGameManager()
+        private ClientGameManager()
         {
             _server.Proxy.On("getDiceResult", (Dice dice) =>
             {
@@ -105,6 +120,15 @@ namespace BackgammonClient.BL
         internal void RegisterBoardUpdatedEvent(BoardUpdatedEventHandler boardUpdatedEvent)
         {
             _boardUpdatedEvent += boardUpdatedEvent;
+        }
+
+        internal bool PrisonerCanEscape()
+        {
+            Task<bool> task = Task.Run(async () =>
+            {
+                return await _server.Proxy.Invoke<bool>("PrisonerCanEscape", _gameKey);
+            });
+            return task.Result;
         }
     }
 }

@@ -73,44 +73,158 @@ namespace BackgammonServer.BL
 
         internal bool MoveChecker(int from, int to, string gameKey)
         {
+
             GameBoardState temp = _boards[gameKey];
+            temp.IsBarred = false;
+            bool isBlack = temp.CurrentPlayer == temp.BlackPlayer;
 
-            if (temp.CurrentPlayer == temp.BlackPlayer)// if is the black player.
+            if (isBlack)// if is the black player.
             {
+                if (!PrisonerCanEscape(gameKey, temp))
+                {
+                    temp.CurrentPlayer = temp.WhitePlayer;
+                    temp.TurnChangaed = true;
+                    return true;
+                }
 
-                if (to <= from || temp.WhiteCheckersLocation.ContainsKey(to)
-                    || !CorrectStep(temp, Math.Abs(from - to)))// if he want to move checker on rival checker.
+                if (temp.BarredBlackCheckers != 0 && from != -1)
                 {
                     return false;
+                }
+
+
+
+                if (to <= from || !CorrectStep(temp, Math.Abs(from - to)))// if he want to move checker on rival checker.
+                {
+                    return false;
+                }
+                if (temp.WhiteCheckersLocation.ContainsKey(to))
+                {
+                    if (temp.WhiteCheckersLocation[to] == 1)
+                    {
+                        SendCheckerToJail(temp, isBlack, to);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                MoveCheckerInDictionary(to, temp.BlackCheckersLocation);
+
+                if (temp.BarredBlackCheckers == 0)
+                {
+                    RemoveCheckerFromDictionary(from, temp.BlackCheckersLocation);
                 }
                 else
                 {
-                    MoveCheckerInDictionary(to, temp.BlackCheckersLocation);
-
-                    RemoveCheckerFromDictionary(from, temp.BlackCheckersLocation);
-
-                    ReplaceTurn(temp, temp.WhitePlayer);
-
+                    temp.BarredBlackCheckers--;
                 }
+
+                ReplaceTurn(temp, temp.WhitePlayer);
+
             }
             else // if is the white player.
             {
-                if (from <= to || temp.BlackCheckersLocation.ContainsKey(to)
-                    || !CorrectStep(temp, Math.Abs(from - to)))
+                if (!PrisonerCanEscape(gameKey, temp))
+                {
+                    temp.CurrentPlayer = temp.BlackPlayer;
+                    temp.TurnChangaed = true;
+                    return true;
+                }
+
+                if (temp.BarredWhiteCheckers != 0 && from != 24)
+                {
+                    return false;//?
+                }
+                if (from <= to || !CorrectStep(temp, Math.Abs(from - to)))
                 {
                     return false;
+                }
+
+                if (temp.BlackCheckersLocation.ContainsKey(to))
+                {
+                    if (temp.BlackCheckersLocation[to] == 1)
+                    {
+                        SendCheckerToJail(temp, isBlack, to);
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
 
                 MoveCheckerInDictionary(to, temp.WhiteCheckersLocation);
 
-                RemoveCheckerFromDictionary(from, temp.WhiteCheckersLocation);
-
+                if (temp.BarredWhiteCheckers == 0)
+                {
+                    RemoveCheckerFromDictionary(from, temp.WhiteCheckersLocation);
+                }
+                else
+                {
+                    temp.BarredWhiteCheckers--;
+                }
                 ReplaceTurn(temp, temp.BlackPlayer);
             }
             temp.MoveFrom = from;
             temp.MoveTo = to;
             _boards[gameKey] = temp;
             return true;
+        }
+
+
+        internal bool PrisonerCanEscape(string gameKey, GameBoardState board = null)
+        {
+            GameBoardState gameBoard = board;
+            if (gameBoard == null)
+            {
+                gameBoard = _boards[gameKey];
+            }
+
+            bool isBlack = gameBoard.CurrentPlayer == gameBoard.BlackPlayer;
+
+            if (isBlack)
+            {
+                if (gameBoard.BarredBlackCheckers != 0)
+                {
+                    if (gameBoard.WhiteCheckersLocation.ContainsKey(gameBoard.Dice.Die1 - 1) && gameBoard.WhiteCheckersLocation.ContainsKey(gameBoard.Dice.Die2 - 1))
+                    {
+                        if (gameBoard.WhiteCheckersLocation[gameBoard.Dice.Die1 - 1] > 1 && gameBoard.WhiteCheckersLocation[gameBoard.Dice.Die2 - 1] > 1)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (gameBoard.BarredWhiteCheckers != 0)
+                {
+                    if (gameBoard.BlackCheckersLocation.ContainsKey(24 - gameBoard.Dice.Die1) && gameBoard.BlackCheckersLocation.ContainsKey(24 - gameBoard.Dice.Die2))
+                    {
+                        if (gameBoard.BlackCheckersLocation[24 - gameBoard.Dice.Die1] > 1 && gameBoard.BlackCheckersLocation[24 - gameBoard.Dice.Die2] > 1)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+
+        }
+
+        private void SendCheckerToJail(GameBoardState tempBoard, bool isBlack, int to)
+        {
+            if (isBlack)
+            {
+                RemoveCheckerFromDictionary(to, tempBoard.WhiteCheckersLocation);
+                tempBoard.BarredWhiteCheckers++;
+            }
+            else
+            {
+                RemoveCheckerFromDictionary(to, tempBoard.BlackCheckersLocation);
+                tempBoard.BarredBlackCheckers++;
+            }
+            tempBoard.IsBarred = true;
         }
 
         private bool CorrectStep(GameBoardState temp, int steps)

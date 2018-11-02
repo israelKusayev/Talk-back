@@ -97,22 +97,25 @@ namespace BackgammonServer.BL
         }
 
 
-        internal bool Login(User user)
+        internal string Login(User user)
         {
-            if (user == null || string.IsNullOrWhiteSpace(user.UserName)
-                           || string.IsNullOrWhiteSpace(user.Password)) return false;
+            if (user == null || string.IsNullOrWhiteSpace(user.UserName) || string.IsNullOrWhiteSpace(user.Password))
+            { return "You must fill the username and password fields."; }
 
             using (var context = new Db())
             {
                 User thisUser = context.UserTable.FirstOrDefault(e => e.UserName == user.UserName);
                 if (thisUser == null || thisUser.Password != user.Password)
                 {
-                    return false;
+                    return "username or password is incorrect.";
                 }
-
+            }
+            if (_contactList[user.UserName] == UserState.online)
+            {
+                return "You are already logged in.";
             }
             UpdateContactList(user.UserName, UserState.online);
-            return true;
+            return null;
         }
 
         internal void Logout(string userName)
