@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace BackgammonClient.ViewModels
 {
-    class RegisterViewModel 
+    class RegisterViewModel
     {
         public User User { get; set; }
         private ClientUserManager _userManager;
@@ -54,8 +54,7 @@ namespace BackgammonClient.ViewModels
             {
                 if (_userManager.InvokeRegister(User))
                 {
-                    ContactPage page = new ContactPage();
-                    Application.Current.MainWindow.Content = page;
+                    Application.Current.MainWindow.Content = new ContactPage();
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using BackgammonClient.BL;
 using BackgammonClient.ViewModels;
+using BackgammonClient.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace BackgammonClient
         public MainWindow()
         {
             InitializeComponent();
+            mainFrame.Navigate(new RegisterPage());
         }
     }
 }

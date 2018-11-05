@@ -34,5 +34,9 @@ namespace General.Interfaces
         bool TurnChangaed { get; set; }
 
         bool IsBarred { get; set; }
+
+        bool BlackCanTakeOut { get; set; }
+
+        bool WhiteCanTakeOut { get; set; }
     }
 }

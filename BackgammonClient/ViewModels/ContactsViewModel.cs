@@ -49,7 +49,9 @@ namespace BackgammonClient.ViewModels
         {
             _userManager = ClientUserManager.Instance;
             _chatManager = ClientChatManager.Instance;
+
             ContactList = ConvertUserForUserView.ConvertUser(_userManager.GetContactList());
+
             _userManager.RegisterNotifyEvent(ContactUptaded);
             _chatManager.RegisterInvitationResponseEvent(HandleUserResponse);
             _chatManager.RegisterChatRequestEvent(AgreeChatRequest);

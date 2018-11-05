@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +19,12 @@ namespace BackgammonClient.ViewModels
 {
     class GameViewModel : ViewModelPropertyChanged
     {
+
+        private int _count;
+        private Dice _dice;
         // Commands.
+
+
         public ICommand RollDiceCommand { get; set; }
         public ICommand ChooseCheckerCommand { get; set; }
 
@@ -232,9 +238,10 @@ namespace BackgammonClient.ViewModels
             {
                 if (!_rollOnes)
                 {
-                    Dice dice = _gameManager.RollDice();
-                    ImgCube1 = $"/Assets/Die_{dice.Die1}.jpg";
-                    ImgCube2 = $"/Assets/Die_{dice.Die2}.jpg";
+                    _dice = _gameManager.RollDice();
+
+                    StartTimer();
+
                     _rollOnes = true;
                 }
             }
@@ -242,8 +249,34 @@ namespace BackgammonClient.ViewModels
 
         private void GetRivalDiceResult(Dice dice)
         {
-            ImgCube1 = $"/Assets/Die_{dice.Die1}.jpg";
-            ImgCube2 = $"/Assets/Die_{dice.Die2}.jpg";
+            _dice = dice;
+            StartTimer();
+            //ImgCube1 = $"/Assets/Die_{dice.Die1}.jpg";
+            //ImgCube2 = $"/Assets/Die_{dice.Die2}.jpg";
+        }
+
+        private void StartTimer()
+        {
+            Timer timer = new Timer();
+            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            timer.Interval = 10;
+            timer.Enabled = true;
+        }
+
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            Timer timer = sender as Timer;
+            Random r = new Random();
+            ImgCube1 = $"/Assets/Die_{r.Next(1, 7)}.jpg";
+            ImgCube2 = $"/Assets/Die_{r.Next(1, 7)}.jpg";
+            _count++;
+            if (_count == 40)
+            {
+                _count = 0;
+                timer.Stop();
+                ImgCube1 = $"/Assets/Die_{_dice.Die1}.jpg";
+                ImgCube2 = $"/Assets/Die_{_dice.Die2}.jpg";
+            }
         }
 
         private void MoveChecker(string location)
@@ -255,8 +288,14 @@ namespace BackgammonClient.ViewModels
                     MessageBox.Show("Please roll dice.");
                 }
 
+                if (MoveCheckerOut(location, _selectedChecker))
+                {
+                    return;
+                }
+
                 if (_selectedChecker == -1)
                 {
+                    //chack if user has Chacker in jail
                     if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer && _gameManager._gameBoard.BarredBlackCheckers != 0)
                     { }
                     else if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.WhitePlayer && _gameManager._gameBoard.BarredWhiteCheckers != 0)
@@ -277,7 +316,6 @@ namespace BackgammonClient.ViewModels
                         }
                         return;
                     }
-
                 }
 
                 int.TryParse(location, out int selectedLocation);
@@ -287,7 +325,7 @@ namespace BackgammonClient.ViewModels
                     {
                         if (!_gameManager.PrisonerCanEscape())
                         {
-                            MessageBox.Show("You can't ascape your turn changed.");
+                            MessageBox.Show(Application.Current.MainWindow, "You can't ascape your turn changed.");
                         }
                     }
                     if (!_gameManager.MoveChecker(_selectedChecker, selectedLocation))
@@ -299,6 +337,49 @@ namespace BackgammonClient.ViewModels
                 _selectedChecker = -1;
 
             }
+        }
+
+        private bool MoveCheckerOut(string location, int selectedChacker)
+        {
+            if (selectedChacker != -1)
+            {
+                return false;
+            }
+
+            int.TryParse(location, out int from);
+            if (!_gameManager.ValidateCheckerColor(from))
+            {
+                return false;
+            }
+
+            if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer && _gameManager._gameBoard.BlackCanTakeOut)
+            {
+                if (_gameManager._gameBoard.Dice.Die1 != -1 && _gameManager._gameBoard.Dice.Die1 >= 24 - from)//die =3 from = 24 - 21 
+                {
+                    _gameManager.MoveChecker(from, -2);
+                    return true;
+                }
+                if (_gameManager._gameBoard.Dice.Die2 != -1 && _gameManager._gameBoard.Dice.Die2 >= 24 - from)//die =3 from = 24 - 21 
+                {
+                    _gameManager.MoveChecker(from, -2);
+                    return true;
+                }
+            }
+            else if (_gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.WhitePlayer && _gameManager._gameBoard.WhiteCanTakeOut)
+            {
+                if (_gameManager._gameBoard.Dice.Die1 != -1 && _gameManager._gameBoard.Dice.Die1 > from)//from = 3  die = 4 true
+                {
+                    _gameManager.MoveChecker(from, -2);
+                    return true;
+                }
+
+                if (_gameManager._gameBoard.Dice.Die2 != -1 && _gameManager._gameBoard.Dice.Die2 > from)//from = 3  die = 4 true
+                {
+                    _gameManager.MoveChecker(from, -2);
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void UpdateGameBoard()
@@ -355,23 +436,31 @@ namespace BackgammonClient.ViewModels
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
+                if (_gameManager._gameBoard.MoveTo == -2)
+                {
+                    _cells[_gameManager._gameBoard.MoveFrom].RemoveAt(0);
+                    return;
+                }
                 if (_gameManager._gameBoard.IsBarred)
                 {
                     _cells[_gameManager._gameBoard.MoveTo].RemoveAt(0);
                 }
 
-                if (_gameManager._gameBoard.MoveFrom != 24 && _gameManager._gameBoard.MoveFrom != -1)
+                if (_gameManager._gameBoard.MoveTo != -10)
                 {
-                    _cells[_gameManager._gameBoard.MoveFrom].RemoveAt(0);
-                }
-                bool color = _gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer ? true : false;
-                if (_gameManager._gameBoard.TurnChangaed)
-                {
-                    _cells[_gameManager._gameBoard.MoveTo].Add(CreateChecker(!color));
-                }
-                else
-                {
-                    _cells[_gameManager._gameBoard.MoveTo].Add(CreateChecker(color));
+                    if (_gameManager._gameBoard.MoveFrom != 24 && _gameManager._gameBoard.MoveFrom != -1)
+                    {
+                        _cells[_gameManager._gameBoard.MoveFrom].RemoveAt(0);
+                    }
+                    bool color = _gameManager._gameBoard.CurrentPlayer == _gameManager._gameBoard.BlackPlayer ? true : false;
+                    if (_gameManager._gameBoard.TurnChangaed)
+                    {
+                        _cells[_gameManager._gameBoard.MoveTo].Add(CreateChecker(!color));
+                    }
+                    else
+                    {
+                        _cells[_gameManager._gameBoard.MoveTo].Add(CreateChecker(color));
+                    }
                 }
             }));
         }

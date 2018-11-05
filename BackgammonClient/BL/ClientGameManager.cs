@@ -72,6 +72,7 @@ namespace BackgammonClient.BL
             {
                 return await _server.Proxy.Invoke<Dice>("RollDice", _gameKey);
             });
+            _gameBoard.Dice = task.Result;
             return task.Result;
         }
 

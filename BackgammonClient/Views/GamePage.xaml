@@ -34,7 +34,7 @@
                     <ColumnDefinition Width="2*"></ColumnDefinition>
                     <ColumnDefinition Width="2*"></ColumnDefinition>
                     <ColumnDefinition Width="2*"></ColumnDefinition>
-                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="1.5*"></ColumnDefinition>
                     <ColumnDefinition Width="2*"></ColumnDefinition>
                     <ColumnDefinition Width="2*"></ColumnDefinition>
                     <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -191,7 +191,7 @@
                         </TransformGroup>
                     </TextBlock.RenderTransform>
                 </TextBlock>
-                <StackPanel Grid.Column="7" HorizontalAlignment="Left" Height="30" Margin="13,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="33">
+                <StackPanel Grid.Column="7" HorizontalAlignment="Left" Height="30" Margin="6,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="33">
                     <Grid Visibility="{Binding WhiteBarredVisibility }" RenderTransformOrigin="0.5,0.5">
                         <Grid.RenderTransform>
                             <TransformGroup>
@@ -205,7 +205,7 @@
                         <TextBlock Text="{Binding WhiteBarredCount}" TextAlignment="Center" FontWeight="Medium" FontSize="20" ></TextBlock>
                     </Grid>
                 </StackPanel>
-                <StackPanel Grid.Column="7" HorizontalAlignment="Left" Height="30" Margin="13,35,0,0" Grid.Row="2" VerticalAlignment="Top" Width="33">
+                <StackPanel Grid.Column="7" HorizontalAlignment="Left" Height="30" Margin="6,35,0,0" Grid.Row="2" VerticalAlignment="Top" Width="33">
                     <Grid Visibility="{Binding BlackBarredVisibility}" RenderTransformOrigin="0.5,0.5">
                         <Grid.RenderTransform>
                             <TransformGroup>

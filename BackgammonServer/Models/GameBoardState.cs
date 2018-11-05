@@ -25,6 +25,8 @@ namespace BackgammonServer.Models
         public int MoveTo { get; set; }
         public bool TurnChangaed { get; set; }
         public bool IsBarred { get; set; }
+        public bool BlackCanTakeOut { get; set; }
+        public bool WhiteCanTakeOut { get; set; }
 
         internal readonly string _blackConectionId;
         internal readonly string _whiteConectionId;
@@ -47,19 +49,34 @@ namespace BackgammonServer.Models
 
         private void InitializeBoardGame()
         {
+            //BlackCheckersLocation = new Dictionary<int, int>()
+            //{
+            //    {0,2},
+            //    {11,5},
+            //    {16,3},
+            //    {18,5}
+            //};
+            //WhiteCheckersLocation = new Dictionary<int, int>()
+            //{
+            //    {5,5},
+            //    {7,3},
+            //    {12,5},
+            //    {23,2}
+            //};
+
             BlackCheckersLocation = new Dictionary<int, int>()
             {
-                {0,2},
-                {11,5},
-                {16,3},
+                {14,2},
+                {20,5},
+                {19,3},
                 {18,5}
             };
             WhiteCheckersLocation = new Dictionary<int, int>()
             {
                 {5,5},
-                {7,3},
-                {12,5},
-                {23,2}
+                {4,3},
+                {1,5},
+                {7,2}
             };
         }
     }

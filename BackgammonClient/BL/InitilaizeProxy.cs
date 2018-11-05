@@ -30,7 +30,7 @@ namespace BackgammonClient.BL
             }
         }
 
-        InitilaizeProxy()
+        private InitilaizeProxy()
         {
             HubConnection = new HubConnection("http://localhost:60762/");
             Proxy = HubConnection.CreateHubProxy("MainHub");

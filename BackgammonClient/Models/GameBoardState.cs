@@ -23,6 +23,7 @@ namespace BackgammonClient.Models
         public int MoveTo { get; set; }
         public bool TurnChangaed { get; set; }
         public bool IsBarred { get; set; }
-
+        public bool BlackCanTakeOut { get; set; }
+        public bool WhiteCanTakeOut { get; set; }
     }
 }

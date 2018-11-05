@@ -8,6 +8,9 @@
         
         Title="MainWindow" Height="530" Width="805">
     <Grid>
-        <Frame Source="Views/RegisterPage.xaml"></Frame>
+        <Frame  Name="mainFrame"  ></Frame>
+        <!--<Frame  Source="    "  > </Frame>-->
     </Grid>
+
+    <!--Source="Views/RegisterPage.xaml"-->
 </Window>
