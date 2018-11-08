@@ -7,7 +7,7 @@
       xmlns:userModel ="clr-namespace:BackgammonClient.Models"
       mc:Ignorable="d" 
       d:DesignHeight="480" d:DesignWidth="800"
-      Title="ContactPage">
+      Title="ContactPage" DataContext="{Binding Path=ContactsViewModel, Source={StaticResource Locator}}">
 
 
     <Page.Resources>

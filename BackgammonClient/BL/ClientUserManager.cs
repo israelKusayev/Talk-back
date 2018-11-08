@@ -18,23 +18,9 @@ namespace BackgammonClient.BL
         public static string CurrentUser { get; set; }
         public static string UserToChatWith { get; set; }
 
-        private static ClientUserManager _Instance;
-
-        public static ClientUserManager Instance
+        public ClientUserManager()
         {
-            get
-            {
-                if (_Instance == null)
-                {
-                    _Instance = new ClientUserManager();
-                }
-                return _Instance;
-            }
-        }
 
-
-        private ClientUserManager()
-        {
             _server.Proxy.On("notifyUserStateChanged", (Dictionary<string, UserState> updatedContactList) =>
             {
                 if (CurrentUser != null)
@@ -43,8 +29,8 @@ namespace BackgammonClient.BL
                 }
                 NotifyEvent?.Invoke(updatedContactList);
             });
-
             _server.HubConnection.Start().Wait();
+
         }
 
 

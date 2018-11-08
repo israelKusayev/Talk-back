@@ -39,8 +39,6 @@ namespace BackgammonClient.Views
         public ChatPage()
         {
             InitializeComponent();
-            DataContext = new ChatViewModel();
-
         }
     }
 }

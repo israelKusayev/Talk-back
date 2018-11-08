@@ -24,7 +24,6 @@ namespace BackgammonClient.Views
         public GamePage()
         {
             InitializeComponent();
-            DataContext = new GameViewModel();
         }
     }
 }

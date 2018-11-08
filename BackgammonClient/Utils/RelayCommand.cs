@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace BackgammonClient.Utils
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         readonly Action _act;
         public RelayCommand(Action act)

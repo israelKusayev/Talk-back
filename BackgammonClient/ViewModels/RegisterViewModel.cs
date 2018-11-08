@@ -1,4 +1,5 @@
 ﻿using BackgammonClient.BL;
+using BackgammonClient.Helpers;
 using BackgammonClient.Models;
 using BackgammonClient.Utils;
 using BackgammonClient.Views;
@@ -14,16 +15,20 @@ namespace BackgammonClient.ViewModels
 {
     class RegisterViewModel
     {
+        private IFrameNavigationService _navigationService;
+
         public User User { get; set; }
         private ClientUserManager _userManager;
 
         public ICommand RegisterCommand { get; set; }
         public ICommand LoginCommand { get; set; }
 
-        public RegisterViewModel()
+        public RegisterViewModel(IFrameNavigationService navigationService)
         {
+            _navigationService = navigationService;
+
             User = new User();
-            _userManager = ClientUserManager.Instance;
+            _userManager = new ClientUserManager();
 
             RegisterCommand = new RelayCommand(Register);
             LoginCommand = new RelayCommand(Login);
@@ -39,7 +44,7 @@ namespace BackgammonClient.ViewModels
             {
                 if (_userManager.InvokeLogin(User))
                 {
-                    Application.Current.MainWindow.Content = new ContactPage();
+                    _navigationService.NavigateTo("Contacts");
                 }
             }
         }
@@ -54,7 +59,7 @@ namespace BackgammonClient.ViewModels
             {
                 if (_userManager.InvokeRegister(User))
                 {
-                    Application.Current.MainWindow.Content = new ContactPage();
+                    _navigationService.NavigateTo("Contacts");
                 }
             }
         }

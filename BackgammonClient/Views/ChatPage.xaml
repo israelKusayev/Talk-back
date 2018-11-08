@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:BackgammonClient.Views"
       mc:Ignorable="d" 
       d:DesignHeight="480" d:DesignWidth="800"
-      Title="Chat page">
+      Title="Chat page" DataContext="{Binding Path=ChatViewModel, Source={StaticResource Locator}}">
 
     <Grid Background="White">
         <Border  HorizontalAlignment="Center" VerticalAlignment="Center"  BorderBrush="Black" BorderThickness="1">

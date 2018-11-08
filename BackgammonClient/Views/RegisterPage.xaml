@@ -7,7 +7,7 @@
       
       mc:Ignorable="d" 
       d:DesignHeight="480" d:DesignWidth="400"
-      Title="RegisterPage">
+      Title="RegisterPage" DataContext="{Binding Path=RegisterViewModel, Source={StaticResource Locator}}">
 
     <Grid Background="White">
         <Border  HorizontalAlignment="Center" VerticalAlignment="Center"  BorderBrush="Black" BorderThickness="1">

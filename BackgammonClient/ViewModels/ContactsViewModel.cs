@@ -1,5 +1,6 @@
 ﻿using BackgammonClient.BL;
 using BackgammonClient.Converters;
+using BackgammonClient.Helpers;
 using BackgammonClient.Models;
 using BackgammonClient.Utils;
 using BackgammonClient.Views;
@@ -26,8 +27,9 @@ namespace BackgammonClient.ViewModels
         public ICommand OpenGameCommand { get; set; }
         public UserForView ChosenContact { get; set; }
 
+        private IFrameNavigationService _navigationService;
         ClientUserManager _userManager;
-        ClientChatManager _chatManager;
+        ClientInteractionManager _interactionManager;
         private ObservableCollection<UserForView> _contactList;
         public ObservableCollection<UserForView> ContactList
         {
@@ -42,26 +44,25 @@ namespace BackgammonClient.ViewModels
             }
         }
 
-
         public string UserTitle { get; set; }
         //ctor
-        public ContactsViewModel()
+        public ContactsViewModel(IFrameNavigationService navigationService)
         {
-            _userManager = ClientUserManager.Instance;
-            _chatManager = ClientChatManager.Instance;
+            _navigationService = navigationService;
+            _userManager = new ClientUserManager();
+            _interactionManager = new ClientInteractionManager();
 
             ContactList = ConvertUserForUserView.ConvertUser(_userManager.GetContactList());
 
             _userManager.RegisterNotifyEvent(ContactUptaded);
-            _chatManager.RegisterInvitationResponseEvent(HandleUserResponse);
-            _chatManager.RegisterChatRequestEvent(AgreeChatRequest);
+            _interactionManager.RegisterInvitationResponseEvent(HandleUserResponse);
+            _interactionManager.RegisterChatRequestEvent(AgreeChatRequest);
 
             LogoutCommand = new RelayCommand(Logout);
             OpenChatCommand = new RelayCommand(OpenChat);
             OpenGameCommand = new RelayCommand(OpenGame);
             UserTitle = $"Welcome {ClientUserManager.CurrentUser}";
         }
-
 
 
         // update contacts list.
@@ -86,7 +87,7 @@ namespace BackgammonClient.ViewModels
                 {
                     ClientUserManager.UserToChatWith = ChosenContact.UserName;
                     _userManager.ChangeUserStatus(UserState.busy);
-                    _chatManager.SendRequest(isChat);
+                    _interactionManager.SendRequest(isChat);
                 }
             }
             else
@@ -101,9 +102,8 @@ namespace BackgammonClient.ViewModels
 
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (isChat) Application.Current.MainWindow.Content = new ChatPage();
-                else Application.Current.MainWindow.Content = new GamePage();
-
+                if (isChat) _navigationService.NavigateTo("Chat");
+                else _navigationService.NavigateTo("Game");
             }));
 
         }
@@ -115,8 +115,8 @@ namespace BackgammonClient.ViewModels
             {
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    if (isChat) Application.Current.MainWindow.Content = new ChatPage();
-                    else Application.Current.MainWindow.Content = new GamePage();
+                    if (isChat) _navigationService.NavigateTo("Chat");
+                    else _navigationService.NavigateTo("Game");
                 }));
             }
             else
@@ -145,7 +145,7 @@ namespace BackgammonClient.ViewModels
         {
             if (_userManager.InvokeLogout())
             {
-                Application.Current.MainWindow.Content = new RegisterPage();
+                _navigationService.GoBack();
             }
         }
     }

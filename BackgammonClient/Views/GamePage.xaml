@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:BackgammonClient.Views"
       mc:Ignorable="d" 
       d:DesignHeight="480" d:DesignWidth="800"
-      Title="GamePage">
+      Title="GamePage" DataContext="{Binding Path=GameViewModel, Source={StaticResource Locator}}">
 
     <Grid>
         <Grid.Background>

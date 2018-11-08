@@ -1,4 +1,5 @@
 ﻿using BackgammonClient.BL;
+using BackgammonClient.Helpers;
 using BackgammonClient.Models;
 using BackgammonClient.Utils;
 using BackgammonClient.Views;
@@ -45,23 +46,26 @@ namespace BackgammonClient.ViewModels
             }
         }
 
+        public string UserTitle { get; set; }
+
+        private IFrameNavigationService _navigationService;
         private ClientUserManager _userManager;
         private ClientChatManager _chatManager;
 
-        public string UserTitle { get; set; }
-
         //ctor
-        public ChatViewModel()
+        public ChatViewModel(IFrameNavigationService navigationService)
         {
-            _userManager = ClientUserManager.Instance;
-            _chatManager = ClientChatManager.Instance;
+
+            _navigationService = navigationService;
+            _userManager = new ClientUserManager();
+            _chatManager = new ClientChatManager();
             UserToChatWith = $"You are talking with: { ClientUserManager.UserToChatWith}";
             UserTitle = $"Welcome {ClientUserManager.CurrentUser}";
             SendMessageCommand = new RelayCommand(SandMessage);
             BackCommand = new RelayCommand(Back);
             _chatManager.RegisterSendMessageEvent(ReciveMessage);
             _chatManager.RegisterUserDisconnectedEvent(ReturnToContactPage);
-        }
+        }   
 
         // Send message to user.
         private void SandMessage()
@@ -85,9 +89,9 @@ namespace BackgammonClient.ViewModels
             _userManager.ChangeUserStatus(UserState.online);
 
             _chatManager.UserDisconnected();
-            Application.Current.MainWindow.Content = new ContactPage();
+            _navigationService.GoBack();
+            //_chatManager.NotifyViewModelbackNavigation
         }
-
 
         // this function called from the server, to close the chat to second user.
         private void ReturnToContactPage()
@@ -95,9 +99,9 @@ namespace BackgammonClient.ViewModels
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 MessageBox.Show(Application.Current.MainWindow, "User leave the chat");
-                Application.Current.MainWindow.Content = new ContactPage();
+                _navigationService.GoBack();
+                //
             }));
         }
-
     }
 }

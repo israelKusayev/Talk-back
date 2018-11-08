@@ -1,4 +1,5 @@
 ﻿using BackgammonClient.BL;
+using BackgammonClient.Helpers;
 using BackgammonClient.Models;
 using BackgammonClient.Utils;
 using General.Models;
@@ -19,19 +20,18 @@ namespace BackgammonClient.ViewModels
 {
     class GameViewModel : ViewModelPropertyChanged
     {
-
-        private int _count;
-        private Dice _dice;
         // Commands.
-
-
         public ICommand RollDiceCommand { get; set; }
         public ICommand ChooseCheckerCommand { get; set; }
+
+        private IFrameNavigationService _navigationService;
 
         // private members.
         private ClientGameManager _gameManager;
         private bool _rollOnes;
         private int _selectedChecker = -1;
+        private int _count;
+        private Dice _dice;
 
         // Binding elements.
         private string _blackUserTitle;
@@ -160,9 +160,10 @@ namespace BackgammonClient.ViewModels
 
 
         // ctor
-        public GameViewModel()
+        public GameViewModel(IFrameNavigationService navigationService)
         {
-            _gameManager = ClientGameManager.Instance;
+            _navigationService = navigationService;
+            _gameManager = new ClientGameManager();
             _gameManager.GetBoardState();
 
             InitializeBoard();
@@ -174,6 +175,8 @@ namespace BackgammonClient.ViewModels
             _gameManager.RegisterGetDiceEvent(GetRivalDiceResult);
             _gameManager.RegisterBoardUpdatedEvent(UpdateGameBoard);
         }
+
+        
 
         private void InitializeBoard()
         {
@@ -251,8 +254,6 @@ namespace BackgammonClient.ViewModels
         {
             _dice = dice;
             StartTimer();
-            //ImgCube1 = $"/Assets/Die_{dice.Die1}.jpg";
-            //ImgCube2 = $"/Assets/Die_{dice.Die2}.jpg";
         }
 
         private void StartTimer()

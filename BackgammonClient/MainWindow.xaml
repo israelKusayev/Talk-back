@@ -3,14 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
+        
         xmlns:local="clr-namespace:BackgammonClient"
         mc:Ignorable="d"
         
-        Title="MainWindow" Height="530" Width="805">
-    <Grid>
-        <Frame  Name="mainFrame"  ></Frame>
-        <!--<Frame  Source="    "  > </Frame>-->
-    </Grid>
+        Title="MainWindow" Height="530" Width="805"
+    DataContext="{Binding Main, Source={StaticResource Locator}}" >
 
-    <!--Source="Views/RegisterPage.xaml"-->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <command:EventToCommand Command="{Binding LoadedCommand, Mode=OneWay}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+    </Grid>
 </Window>

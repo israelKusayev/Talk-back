@@ -23,23 +23,7 @@ namespace BackgammonClient.BL
         private event GetDiceEventHandler _getDiceEvent;
         private event BoardUpdatedEventHandler _boardUpdatedEvent;
 
-
-        private static ClientGameManager _Instance;
-
-        public static ClientGameManager Instance
-        {
-            get
-            {
-                if (_Instance == null)
-                {
-                    _Instance = new ClientGameManager();
-                }
-                return _Instance;
-            }
-            set { _Instance = value; }
-        }
-        //ctor
-        private ClientGameManager()
+        public ClientGameManager()
         {
             _server.Proxy.On("getDiceResult", (Dice dice) =>
             {
@@ -54,10 +38,10 @@ namespace BackgammonClient.BL
             });
             _server.HubConnection.Start().Wait();
 
-            _gameKey = GetGameKey();
+            _gameKey = GetGameKeyFromServer();
         }
 
-        private string GetGameKey()
+        private string GetGameKeyFromServer()
         {
             Task<string> task = Task.Run(async () =>
             {
@@ -118,6 +102,7 @@ namespace BackgammonClient.BL
         {
             _getDiceEvent += getDiceEvent;
         }
+
         internal void RegisterBoardUpdatedEvent(BoardUpdatedEventHandler boardUpdatedEvent)
         {
             _boardUpdatedEvent += boardUpdatedEvent;
